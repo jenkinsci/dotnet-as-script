@@ -29,7 +29,6 @@ import hudson.Launcher;
 import hudson.model.TaskListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
@@ -39,22 +38,36 @@ import org.apache.commons.io.FileUtils;
  * @author NewType
  */
 public class DotNetCommandLine {
-    String projectContainer;
     String projectName;
     Launcher launcher;
     EnvVars env;
     File targetWorkspace;
     TaskListener listener;
     
+    /**
+     * 
+     * @param launcher
+     * @param env
+     * @param listener
+     * @param targetWorkspace
+     * @param projectName
+     * @throws IOException
+     * @throws InterruptedException 
+     */
     public DotNetCommandLine(Launcher launcher, EnvVars env, TaskListener listener, File targetWorkspace, String projectName) throws IOException, InterruptedException {
         this.launcher = launcher;
-        this.projectContainer = projectContainer;
         this.projectName = projectName;
         this.env = env;
         this.targetWorkspace = targetWorkspace;
         this.listener = listener;
     }
     
+    /**
+     * 
+     * @return
+     * @throws IOException
+     * @throws InterruptedException 
+     */
     public boolean CreateProject() throws IOException, InterruptedException
     {
         List<String> argsCreate = Arrays.asList("dotnet", "new", "console", "-n", this.projectName);
@@ -101,6 +114,19 @@ public class DotNetCommandLine {
         int result = this.ExecuteArgs(argsCreate, projectFolder);        
         return result == 0;
     }
+    
+    public boolean AddPackage(String packageName, String version) throws IOException, InterruptedException {
+        List<String> argsCreate = Arrays.asList("dotnet", "add", "package", packageName, "-v", version);
+        
+        File projectFolder = this.GetProjectFolder();
+        
+        if (!projectFolder.exists())
+            return false;
+        
+        int result = this.ExecuteArgs(argsCreate, projectFolder);        
+        return result == 0;
+    }
+    
     
     public boolean Build() throws IOException, InterruptedException {
         List<String> argsCreate = Arrays.asList("dotnet", "build");

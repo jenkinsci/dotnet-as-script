@@ -34,6 +34,8 @@ import java.io.Serializable;
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Sample {@link Builder}.
@@ -53,15 +55,18 @@ import java.util.ArrayList;
  */
 public class DotNetCoreRunner extends Builder implements Serializable {
 
+    private BuildListener currentListener;
     private final String targetCode;
+    private final String additionalPackages;
 
     // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
     @DataBoundConstructor
-    public DotNetCoreRunner(String targetCode) {
+    public DotNetCoreRunner(String targetCode, String additionalPackages) {
         this.targetCode = targetCode;
+        this.additionalPackages = additionalPackages;
     }
     
-    private String getStepIdentificator(String code) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    private String getStringIdentificator(String code) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest crypt = MessageDigest.getInstance("SHA-1");
         crypt.reset();
         crypt.update(code.getBytes("UTF-8"));
@@ -75,6 +80,39 @@ public class DotNetCoreRunner extends Builder implements Serializable {
     public String getTargetCode() {
         return this.targetCode;
     }
+    
+    public String getAdditionalPackages() {
+        if (this.additionalPackages == null) {
+            return "";
+        }
+        return this.additionalPackages;
+    }
+    
+    public Map<String, String> parseAdditionalPackages() {
+        String targetPackages = this.getAdditionalPackages();
+        if (targetPackages == null || targetPackages.length() == 0) {
+            return new HashMap<String, String>();
+        }
+        
+        JSONObject jsonObject = JSONObject.fromObject(targetPackages);
+        Iterator iterator = jsonObject.keys();
+        
+        Map<String, String> result = new HashMap<String, String>();
+        
+        while (iterator.hasNext())
+        {               
+            String thePackage = iterator.next().toString();
+            String theVersion = jsonObject.getString(thePackage);
+            result.put(thePackage, theVersion);
+        }
+        
+        return result;
+    }
+    
+    private void println(String message) {
+        this.currentListener.getLogger().println(message);        
+    }
+            
 
     /**
      *
@@ -84,15 +122,23 @@ public class DotNetCoreRunner extends Builder implements Serializable {
      * @return
      */
     @Override
-    public boolean perform(@Nonnull AbstractBuild<?, ?> build, @Nonnull Launcher launcher, @Nonnull BuildListener listener) throws IOException, InterruptedException {
+    public boolean perform(@Nonnull AbstractBuild<?, ?> build, @Nonnull Launcher launcher, @Nonnull BuildListener listener) throws IOException, InterruptedException, UnsupportedEncodingException {
+        this.currentListener = listener;
         File dotScriptWorkspace = new File(new File(build.getWorkspace().toURI()), ".dotscript");
         String folderName = "";
+        String jsonPackage = "Newtonsoft.Json";
+        String packagesIdentificator = "";
         
-        List<String> targetPackages = new ArrayList<String>();
-        targetPackages.add("Newtonsoft.Json");
+        Map<String, String> mapPackages = this.parseAdditionalPackages();
+        if (!mapPackages.containsKey(jsonPackage)) {
+            mapPackages.put(jsonPackage, null);
+        }      
+        
+        listener.getLogger().println("##### Target Packages: " + this.getAdditionalPackages());        
         
         try {
-            folderName = this.getStepIdentificator(this.getTargetCode());
+            folderName = this.getStringIdentificator(this.getTargetCode());
+            packagesIdentificator = this.getStringIdentificator(this.getAdditionalPackages());
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(DotNetCoreRunner.class.getName()).log(Level.SEVERE, null, ex);
             return false;
@@ -102,18 +148,23 @@ public class DotNetCoreRunner extends Builder implements Serializable {
 
         EnvVars env = build.getEnvironment(listener);
         DotNetCommandLine dotNetCommandLine = new DotNetCommandLine(launcher, env, listener, uniqueFolder, "dotscript");
-        File marker = new File(dotNetCommandLine.GetProjectFolder(), ".updated");
+        File marker = new File(dotNetCommandLine.GetProjectFolder(), ".buildInformation");
         boolean recreateProject = false; 
         
         if (!uniqueFolder.exists()) {
             uniqueFolder.mkdir();            
             recreateProject = true;
         } else {
-            if (!marker.exists()) {
-                uniqueFolder.delete();
-                uniqueFolder.mkdir();
-                recreateProject = true;
-            }            
+            try {
+                if (!marker.exists() || this.isPackagesChanged(marker)) {
+                    uniqueFolder.delete();
+                    uniqueFolder.mkdir();
+                    recreateProject = true;            
+                }
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(DotNetCoreRunner.class.getName()).log(Level.SEVERE, null, ex);
+                build.setResult(Result.FAILURE);
+            }
         }
         
         if (recreateProject) {
@@ -123,18 +174,28 @@ public class DotNetCoreRunner extends Builder implements Serializable {
             dotNetCommandLine.CreateProject();    
             
             this.writeFile(mainCSharpFile, this.getTargetCode());
-            this.writeFile(new File(dotNetCommandLine.GetProjectFolder(), "JenkinsExecutor.cs"), this.getFile("dotnet/JenkinsExecutor.cs"));
-            this.writeFile(new File(dotNetCommandLine.GetProjectFolder(), "JenkinsManager.cs"), this.getFile("dotnet/JenkinsManager.cs"));
-            this.writeFile(new File(dotNetCommandLine.GetProjectFolder(), "Program.cs"), this.getFile("dotnet/Program.cs"));
+            this.writeFile(new File(dotNetCommandLine.GetProjectFolder(), "JenkinsExecutor.cs"), this.getResourceFileContent("dotnet/JenkinsExecutor.cs"));
+            this.writeFile(new File(dotNetCommandLine.GetProjectFolder(), "JenkinsManager.cs"), this.getResourceFileContent("dotnet/JenkinsManager.cs"));
+            this.writeFile(new File(dotNetCommandLine.GetProjectFolder(), "Program.cs"), this.getResourceFileContent("dotnet/Program.cs"));
 
-            for(String thePackage : targetPackages) {
-                dotNetCommandLine.AddPackage(thePackage);
+            for(Map.Entry<String, String> targetPackage : mapPackages.entrySet()) {
+                if (targetPackage.getValue() == null) {
+                    dotNetCommandLine.AddPackage(targetPackage.getKey());
+                } else {
+                    dotNetCommandLine.AddPackage(targetPackage.getKey(), targetPackage.getValue());
+                }
+                
             }
             
             dotNetCommandLine.RestoreDependencies();
             dotNetCommandLine.Build();
+            
+            Map<String, String> mapParameters = new HashMap<String, String>();
+            
+            mapParameters.put("buildNumber", build.getNumber() + "");
+            mapParameters.put("packagesHash", packagesIdentificator);
 
-            marker.createNewFile();
+            this.saveBuildInformation(marker, mapParameters);
         }        
         
         listener.getLogger().println("##### " + folderName);        
@@ -155,6 +216,23 @@ public class DotNetCoreRunner extends Builder implements Serializable {
         }
         
         return true;
+    }
+    
+    private boolean isPackagesChanged(File marker) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        String content = this.getFileContent(marker);
+        JSONObject jsonObj = JSONObject.fromObject(content);
+        String savedHash = jsonObj.get("packagesHash").toString();        
+        String currentHash = this.getStringIdentificator(this.getAdditionalPackages());
+        this.println("### Comparison: " + savedHash + " vs " + currentHash);
+        return !savedHash.equals(currentHash);
+    }
+    
+    private void saveBuildInformation(File marker, Map<String, String> parameters) throws FileNotFoundException {
+        JSONObject jsonObject = new JSONObject();
+        for(Map.Entry<String, String> parameter : parameters.entrySet()) {
+            jsonObject.put(parameter.getKey(), parameter.getValue());
+        }
+        this.writeFile(marker, jsonObject.toString());
     }
     
     private void processResultFile(File resultsFile, AbstractBuild<?,?> build, Launcher launcher, EnvVars env, BuildListener listener) throws IOException, EnvInjectException, InterruptedException { 
@@ -200,29 +278,30 @@ public class DotNetCoreRunner extends Builder implements Serializable {
         }
     }
     
-    private String getFile(String fileName) {
+    private String getFileContent(File file) {
+        StringBuilder result = new StringBuilder("");
+        
+        try (Scanner scanner = new Scanner(file)) {
 
-	StringBuilder result = new StringBuilder("");
+            while (scanner.hasNextLine()) {
+                    String line = scanner.nextLine();
+                    result.append(line).append("\n");
+            }
 
-	//Get file from resources folder
-	ClassLoader classLoader = getClass().getClassLoader();
-	File file = new File(classLoader.getResource(fileName).getFile());
+            scanner.close();
 
-	try (Scanner scanner = new Scanner(file)) {
-
-		while (scanner.hasNextLine()) {
-			String line = scanner.nextLine();
-			result.append(line).append("\n");
-		}
-
-		scanner.close();
-
-	} catch (IOException e) {
-		e.printStackTrace();
+	} catch (Exception e) {
+            e.printStackTrace();
 	}
 		
 	return result.toString();
-
+    }
+    
+    private String getResourceFileContent(String fileName) {
+	//Get file from resources folder
+	ClassLoader classLoader = getClass().getClassLoader();
+	File file = new File(classLoader.getResource(fileName).getFile());
+        return this.getFileContent(file);
     }
 
     // Overridden for better type safety.
@@ -232,7 +311,7 @@ public class DotNetCoreRunner extends Builder implements Serializable {
     public DescriptorImpl getDescriptor() {
         return (DescriptorImpl)super.getDescriptor();
     }
-
+    
     /**
      * Descriptor for {@link DotNetCoreRunner}. Used as a singleton.
      * The class is marked as public so that it can be accessed from views.

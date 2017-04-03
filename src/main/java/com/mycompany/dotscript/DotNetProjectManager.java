@@ -23,10 +23,24 @@
  */
 package com.mycompany.dotscript;
 
+import java.util.List;
+
 /**
  *
  * @author NewType
  */
-public interface DotNetCommand {
-    void Run();
+public class DotNetProjectManager {
+    private final DotNetCommandLine commandLine;
+    private final List<FileForCreation> filesToCreate;
+    private final DotNetPackages packages;
+    
+    /**
+     * 
+     * @param commandLine 
+     */
+    public DotNetProjectManager(DotNetCommandLine commandLine, List<FileForCreation> filesToCreate, DotNetPackages packages) {
+        this.commandLine = commandLine;
+        this.filesToCreate = filesToCreate;
+        this.packages = packages;
+    }
 }
