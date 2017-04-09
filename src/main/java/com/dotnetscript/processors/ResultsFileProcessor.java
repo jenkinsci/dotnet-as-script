@@ -21,26 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.mycompany.dotscript;
-
-import java.util.List;
+package com.dotnetscript.processors;
 
 /**
  *
  * @author NewType
  */
-public class DotNetProjectManager {
-    private final DotNetCommandLine commandLine;
-    private final List<FileForCreation> filesToCreate;
-    private final DotNetPackages packages;
+public class ResultsFileProcessor {
     
-    /**
-     * 
-     * @param commandLine 
-     */
-    public DotNetProjectManager(DotNetCommandLine commandLine, List<FileForCreation> filesToCreate, DotNetPackages packages) {
-        this.commandLine = commandLine;
-        this.filesToCreate = filesToCreate;
-        this.packages = packages;
-    }
 }

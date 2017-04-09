@@ -1,3 +1,5 @@
+package com.dotnetscript.general;
+
 /*
  * The MIT License
  *
@@ -21,23 +23,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.mycompany.dotscript;
-
-import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 /**
  *
  * @author NewType
  */
-public class StringTools {
-        
-    public static String getStringIdentificator(String code) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        MessageDigest crypt = MessageDigest.getInstance("SHA-1");
-        crypt.reset();
-        crypt.update(code.getBytes("UTF-8"));
-        return new BigInteger(1, crypt.digest()).toString(16);
-    }
+public class ProjectConstants {
+    public static final String PROJECT_FOLDER_NAME = "dotscript";
+    public static final String BUILD_INFORMATION_FILE = ".buildInformation";
+    public static final String CACHE_FOLDER_NAME = ".dotscript";
 }

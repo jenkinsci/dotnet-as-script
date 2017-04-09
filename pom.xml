@@ -9,8 +9,8 @@
     <version>2.11</version>
     <relativePath/>
   </parent>
-  <groupId>com.mycompany</groupId>
-  <artifactId>dotScript</artifactId>
+  <groupId>com.dotNetScript</groupId>
+  <artifactId>dotNetScript</artifactId>
   <version>1.0</version>
   <packaging>hpi</packaging>
 
@@ -28,7 +28,7 @@
     -->
   </properties>
 
-  <name>TODO Plugin</name>
+  <name>dotNetScript</name>
   <description>TODO</description>
   <url>https://wiki.jenkins-ci.org/display/JENKINS/TODO+Plugin</url>
 

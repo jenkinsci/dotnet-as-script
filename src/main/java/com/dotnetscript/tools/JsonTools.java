@@ -21,34 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.mycompany.dotscript;
+package com.dotnetscript.tools;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import net.sf.json.JSONObject;
 
 /**
  *
  * @author NewType
  */
-public class FileForCreation {
-    private String path;
-    private String content;
+public class JsonTools {
     
-    public FileForCreation(String path, String content) {
-        this.path = path;
-        this.content = content;
+    public static Map<String, String> JsonToStringMap(String json) {
+        Map<String, String> result = new HashMap<String, String>();
+        JSONObject jsonObject = JSONObject.fromObject(json);
+        Iterator iterator = jsonObject.keys();
+        while (iterator.hasNext()) {
+            String key = iterator.next().toString();
+            Object objValue = jsonObject.get(key);
+            String strValue = null;
+            if (objValue != null) {
+                strValue = objValue.toString();
+            }
+            result.put(key, strValue);
+        }
+        return result;
     }
     
-    public String getPath() {
-        return this.path;
-    }
-    
-    public void setPath(String path) {
-        this.path = path;
-    }
-    
-    public String getContent() {
-        return this.content;
-    }
-    
-    public void setContent(String content) {
-        this.content = content;
+    public static String StringMapToJson(Map<String, String> map) {
+        JSONObject jsonObject = new JSONObject();
+        for(Map.Entry<String, String> mapEntry : map.entrySet()) {
+            jsonObject.put(mapEntry.getKey(), mapEntry.getValue());
+        }
+        return jsonObject.toString();
     }
 }

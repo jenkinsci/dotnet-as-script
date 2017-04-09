@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.mycompany.dotscript;
+package com.dotnetscript.managers;
 
 import hudson.EnvVars;
 import hudson.FilePath;
@@ -29,6 +29,7 @@ import hudson.Launcher;
 import hudson.model.TaskListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
@@ -37,7 +38,7 @@ import org.apache.commons.io.FileUtils;
  *
  * @author NewType
  */
-public class DotNetCommandLine {
+public class DotNetCommandLineManager extends ManagerBase {
     String projectName;
     Launcher launcher;
     EnvVars env;
@@ -54,7 +55,9 @@ public class DotNetCommandLine {
      * @throws IOException
      * @throws InterruptedException 
      */
-    public DotNetCommandLine(Launcher launcher, EnvVars env, TaskListener listener, File targetWorkspace, String projectName) throws IOException, InterruptedException {
+    public DotNetCommandLineManager(PrintStream logger, Launcher launcher, EnvVars env, TaskListener listener, File targetWorkspace, String projectName) throws IOException, InterruptedException {
+        super(logger);
+
         this.launcher = launcher;
         this.projectName = projectName;
         this.env = env;
@@ -68,11 +71,11 @@ public class DotNetCommandLine {
      * @throws IOException
      * @throws InterruptedException 
      */
-    public boolean CreateProject() throws IOException, InterruptedException
+    public boolean createProject() throws IOException, InterruptedException
     {
         List<String> argsCreate = Arrays.asList("dotnet", "new", "console", "-n", this.projectName);
         
-        File projectFolder = this.GetProjectFolder();
+        File projectFolder = this.getProjectFolder();
         
         if (projectFolder.exists())
         {
@@ -82,78 +85,78 @@ public class DotNetCommandLine {
                 FileUtils.deleteDirectory(projectFolder);
         }
         
-        int result = this.ExecuteArgs(argsCreate, this.targetWorkspace);        
+        int result = this.executeArgs(argsCreate, this.targetWorkspace);        
         return result == 0;
     }
     
-    public boolean RestoreDependencies() throws IOException, InterruptedException
+    public boolean restoreDependencies() throws IOException, InterruptedException
     {
         List<String> argsCreate = Arrays.asList("dotnet", "restore");
         
-        File projectFolder = this.GetProjectFolder();
+        File projectFolder = this.getProjectFolder();
         
         if (!projectFolder.exists())
             return false;
         
-        int result = this.ExecuteArgs(argsCreate, projectFolder);        
+        int result = this.executeArgs(argsCreate, projectFolder);        
         return result == 0;
     }
     
-    public File GetProjectFolder() {
+    public File getProjectFolder() {
         return new File(this.targetWorkspace, this.projectName);
     }
 
-    public boolean AddPackage(String packageName) throws IOException, InterruptedException {
+    public boolean addPackage(String packageName) throws IOException, InterruptedException {
         List<String> argsCreate = Arrays.asList("dotnet", "add", "package", packageName);
         
-        File projectFolder = this.GetProjectFolder();
+        File projectFolder = this.getProjectFolder();
         
         if (!projectFolder.exists())
             return false;
         
-        int result = this.ExecuteArgs(argsCreate, projectFolder);        
+        int result = this.executeArgs(argsCreate, projectFolder);        
         return result == 0;
     }
     
-    public boolean AddPackage(String packageName, String version) throws IOException, InterruptedException {
+    public boolean addPackage(String packageName, String version) throws IOException, InterruptedException {
         List<String> argsCreate = Arrays.asList("dotnet", "add", "package", packageName, "-v", version);
         
-        File projectFolder = this.GetProjectFolder();
+        File projectFolder = this.getProjectFolder();
         
         if (!projectFolder.exists())
             return false;
         
-        int result = this.ExecuteArgs(argsCreate, projectFolder);        
+        int result = this.executeArgs(argsCreate, projectFolder);        
         return result == 0;
     }
     
     
-    public boolean Build() throws IOException, InterruptedException {
+    public boolean build() throws IOException, InterruptedException {
         List<String> argsCreate = Arrays.asList("dotnet", "build");
         
-        File projectFolder = this.GetProjectFolder();
+        File projectFolder = this.getProjectFolder();
         
         if (!projectFolder.exists())
             return false;
         
-        int result = this.ExecuteArgs(argsCreate, projectFolder);        
+        int result = this.executeArgs(argsCreate, projectFolder);        
         return result == 0;
     }
     
-    public boolean Run() throws IOException, InterruptedException
+    public boolean run() throws IOException, InterruptedException
     {
         List<String> argsCreate = Arrays.asList("dotnet", "run");
         
-        File projectFolder = this.GetProjectFolder();
+        File projectFolder = this.getProjectFolder();
         
         if (!projectFolder.exists())
             return false;
         
-        int result = this.ExecuteArgs(argsCreate, projectFolder);        
+        int result = this.executeArgs(argsCreate, projectFolder);        
         return result == 0;
     }
     
-    private int ExecuteArgs(List<String> args, File targetDirectory) throws IOException, InterruptedException
+    private int executeArgs(List<String> args, File targetDirectory) throws IOException, InterruptedException
     {
         return this.launcher
                 .launch()

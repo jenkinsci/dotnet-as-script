@@ -21,34 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.mycompany.dotscript;
+package com.dotnetscript.managers;
 
-import java.util.Map;
+import java.io.PrintStream;
 
 /**
  *
  * @author NewType
  */
-public class DotNetPackages {
-    private Map<String, String> packagesMap;
+public abstract class ManagerBase {
+    protected PrintStream logger;
     
-    public DotNetPackages(String jsonPackages) {
-        this.packagesMap = JsonTools.JsonToStringMap(jsonPackages);
+    public ManagerBase(PrintStream logger) {
+        this.logger = logger;
+    }
+   
+    protected void log(String message) {
+        this.logger.println(message);
     }
     
-    public boolean Contains(String packageName) {
-        return this.packagesMap.containsKey(packageName);
-    }
-    
-    public Map<String, String> getPackagesMap() {
-        return this.getPackagesMap();
-    }
-    
-    public void addPackage(String packageName, String version) {
-        this.packagesMap.put(packageName, version);
-    }
-    
-    public String normalizedJson() {
-        return JsonTools.StringMapToJson(this.packagesMap);
+    protected void prettyLog(String message) {
+        this.log("### " + message);
     }
 }

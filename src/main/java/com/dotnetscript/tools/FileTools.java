@@ -21,39 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.mycompany.dotscript;
+package com.dotnetscript.tools;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import net.sf.json.JSONObject;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.Scanner;
 
 /**
  *
  * @author NewType
  */
-public class JsonTools {
-    public static Map<String, String> JsonToStringMap(String json) {
-        Map<String, String> result = new HashMap<String, String>();
-        JSONObject jsonObject = JSONObject.fromObject(json);
-        Iterator iterator = jsonObject.keys();
-        while (iterator.hasNext()) {
-            String key = iterator.next().toString();
-            Object objValue = jsonObject.get(key);
-            String strValue = null;
-            if (objValue != null) {
-                strValue = objValue.toString();
-            }
-            result.put(key, strValue);
+public class FileTools { 
+    
+    public static void writeFile(File file, String content) throws FileNotFoundException {
+        try (PrintWriter writer = new PrintWriter(file)) {
+            writer.write(content);
         }
-        return result;
     }
     
-    public static String StringMapToJson(Map<String, String> map) {
-        JSONObject jsonObject = new JSONObject();
-        for(Map.Entry<String, String> mapEntry : map.entrySet()) {
-            jsonObject.put(mapEntry.getKey(), mapEntry.getValue());
-        }
-        return jsonObject.toString();
-    }
+    public static String getFileContent(File file) {
+        StringBuilder result = new StringBuilder("");
+        
+        try (Scanner scanner = new Scanner(file)) {
+
+            while (scanner.hasNextLine()) {
+                    String line = scanner.nextLine();
+                    result.append(line).append("\n");
+            }
+
+            scanner.close();
+
+	} catch (Exception e) {
+            e.printStackTrace();
+	}
+		
+	return result.toString();
+    }  
+
 }
