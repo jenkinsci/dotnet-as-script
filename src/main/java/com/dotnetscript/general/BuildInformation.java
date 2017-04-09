@@ -34,7 +34,12 @@ public class BuildInformation {
     private int buildNumber;
     private String packagesHash;
     
-    public static BuildInformation LoadFromJson(String json) {
+    /**
+     * Load the build information from a json string
+     * @param json
+     * @return 
+     */
+    public static BuildInformation loadFromJson(String json) {
         BuildInformation newOne = new BuildInformation();
         
         JSONObject jsonObject = JSONObject.fromObject(json);

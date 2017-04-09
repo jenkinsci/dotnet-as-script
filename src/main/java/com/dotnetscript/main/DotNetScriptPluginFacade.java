@@ -95,7 +95,7 @@ public class DotNetScriptPluginFacade {
         projectManager.addFileForCreation("TargetCode.cs", targetCode);
    
         if (!uniqueFolder.exists()) {
-            uniqueFolder.mkdir();            
+            uniqueFolder.mkdir();
         }
         
         projectManager.createProject();

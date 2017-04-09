@@ -1,0 +1,36 @@
+<div>
+    Your c# code to execute, the plugin will rebuild your code if detect some change.
+    
+    These are some examples of the target code for this plugin:
+
+    <br>
+    <div>
+        <!-- code formatted by http://manoli.net/csharpformat/ -->
+        <pre class="csharpcode">
+        <span class="rem">// Complete example</span>
+        <span class="kwrd">using</span> DotNetTools.Jenkins;
+        <span class="kwrd">using</span> System;        
+
+        <span class="kwrd">public</span> <span class="kwrd">class</span> JenkinsPlugin
+        {
+            <span class="kwrd">public</span> <span class="kwrd">static</span> <span class="kwrd">void</span> DotScriptMain(JenkinsManager manager)
+            {
+                Console.WriteLine(<span class="str">"######## c# code !!!"</span>);
+                manager.SetSessionEnv(<span class="str">"PI"</span>, Math.PI.ToString());
+            }
+        }</pre>
+    </div>
+    <br><br>
+    <div>
+        <!-- code formatted by http://manoli.net/csharpformat/ -->
+        <pre class="csharpcode">
+        <span class="rem">//Simple Example</span>
+        <span class="kwrd">public</span> <span class="kwrd">class</span> JenkinsPlugin
+        {
+            <span class="kwrd">public</span> <span class="kwrd">static</span> <span class="kwrd">void</span> DotScriptMain()
+            {
+                Console.WriteLine(<span class="str">"######## c# code !!!"</span>);
+            }
+        } </pre>
+    </div>
+</div>

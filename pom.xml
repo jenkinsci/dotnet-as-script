@@ -29,7 +29,7 @@
   </properties>
 
   <name>dotNetScript</name>
-  <description>TODO</description>
+  <description>This jenkins plugin able you to run c# code as a build step.</description>
   <url>https://wiki.jenkins-ci.org/display/JENKINS/TODO+Plugin</url>
 
   <!-- The default licence for Jenkins OSS Plugins is MIT. Substitute for the applicable one if needed. -->

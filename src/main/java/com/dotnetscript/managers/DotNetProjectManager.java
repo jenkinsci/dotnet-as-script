@@ -26,7 +26,6 @@ package com.dotnetscript.managers;
 import com.dotnetscript.general.FileForCreation;
 import com.dotnetscript.general.ProjectConstants;
 import com.dotnetscript.general.BuildInformation;
-import com.dotnetscript.managers.BuildInformationManager;
 import com.dotnetscript.tools.FileTools;
 import java.io.File;
 import java.io.FileNotFoundException;
