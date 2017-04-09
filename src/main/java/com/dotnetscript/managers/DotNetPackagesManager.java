@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 NewType.
+ * Copyright 2017 Ariel.Lenis.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,34 +32,63 @@ import java.util.Map;
 
 /**
  *
- * @author NewType
+ * @author Ariel.Lenis
  */
 public class DotNetPackagesManager extends ManagerBase {
     private final Map<String, String> packagesMap;
     
+    /**
+     * The packages manager constructor
+     * @param logger
+     * @param jsonPackages 
+     */
     public DotNetPackagesManager(PrintStream logger, String jsonPackages) {
         super(logger);
         
-        this.packagesMap = JsonTools.JsonToStringMap(jsonPackages);
+        this.packagesMap = JsonTools.jsonToStringMap(jsonPackages);
     }
     
+    /**
+     * Determines if the manager currently have the target package
+     * @param packageName
+     * @return 
+     */
     public boolean contains(String packageName) {
         return this.packagesMap.containsKey(packageName);
     }
     
+    /**
+     * Returns all the stored packages
+     * @return 
+     */
     public Map<String, String> getPackagesMap() {
         return this.packagesMap;
     }
     
+    /**
+     * Puts a package inside the internal map
+     * @param packageName
+     * @param version 
+     */
     public void putPackage(String packageName, String version) {
         this.packagesMap.put(packageName, version);
     }
     
+    /**
+     * Returns the map of packages as a JSON string
+     * @return 
+     */
     public String normalizedJson() {
-        return JsonTools.StringMapToJson(this.packagesMap);
+        return JsonTools.stringMapToJson(this.packagesMap);
     }
     
+    /**
+     * Returns a SHA-1 string that represents the JSON representation of the packages map
+     * @return
+     * @throws NoSuchAlgorithmException
+     * @throws UnsupportedEncodingException 
+     */
     public String getPackagesHash() throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        return StringTools.getStringIdentificator(JsonTools.StringMapToJson(this.packagesMap));
+        return StringTools.getStringIdentificator(JsonTools.stringMapToJson(this.packagesMap));
     }
 }

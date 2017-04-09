@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 NewType.
+ * Copyright 2017 Ariel.Lenis.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,18 +31,24 @@ import java.io.PrintStream;
 
 /**
  *
- * @author NewType
+ * @author Ariel.Lenis
  */
 public class BuildInformationManager extends ManagerBase {
     private final File buildInformationFile;
     private boolean isInformationLoaded;
     private BuildInformation buildInformation;
     
+    /**
+     * Constructor for the build information manager
+     * @param logger
+     * @param buildInformationFile 
+     */
     public BuildInformationManager(PrintStream logger, File buildInformationFile) {
         super(logger);
         
         this.isInformationLoaded = false;
         this.buildInformationFile = buildInformationFile;
+        this.buildInformation = null;
     }
     
     private boolean buildInformationExists() {
@@ -53,12 +59,20 @@ public class BuildInformationManager extends ManagerBase {
         return this.isInformationLoaded;
     }
     
+    /**
+     * Reload the build information based in the build information file
+     */
     public void reloadInformation() {
         String json = FileTools.getFileContent(this.buildInformationFile);
-        this.buildInformation = BuildInformation.LoadFromJson(json);
+        this.buildInformation = BuildInformation.loadFromJson(json);
         this.isInformationLoaded = true;        
     }    
     
+    /**
+     * Determines if the project needs be recreated
+     * @param packagesHash
+     * @return 
+     */
     public boolean needsRecreation(String packagesHash) {
         if (!this.buildInformationExists()) {
             this.prettyLog("The build information file doesn't exists.");

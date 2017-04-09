@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 NewType.
+ * Copyright 2017 Ariel.Lenis.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,12 +30,17 @@ import net.sf.json.JSONObject;
 
 /**
  *
- * @author NewType
+ * @author Ariel.Lenis
  */
 public class JsonTools {
     
-    public static Map<String, String> JsonToStringMap(String json) {
-        Map<String, String> result = new HashMap<String, String>();
+    /**
+     * Static method that converts a JSON string to a map of String values
+     * @param json
+     * @return 
+     */
+    public static Map<String, String> jsonToStringMap(String json) {
+        Map<String, String> result = new HashMap<>();
         JSONObject jsonObject = JSONObject.fromObject(json);
         Iterator iterator = jsonObject.keys();
         while (iterator.hasNext()) {
@@ -50,7 +55,12 @@ public class JsonTools {
         return result;
     }
     
-    public static String StringMapToJson(Map<String, String> map) {
+    /**
+     * Static method that converts a String map to a JSON string representation.
+     * @param map
+     * @return 
+     */
+    public static String stringMapToJson(Map<String, String> map) {
         JSONObject jsonObject = new JSONObject();
         for(Map.Entry<String, String> mapEntry : map.entrySet()) {
             jsonObject.put(mapEntry.getKey(), mapEntry.getValue());

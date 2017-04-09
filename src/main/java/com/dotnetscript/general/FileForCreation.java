@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 NewType.
+ * Copyright 2017 Ariel.Lenis.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,29 +25,50 @@ package com.dotnetscript.general;
 
 /**
  *
- * @author NewType
+ * @author Ariel.Lenis
  */
 public class FileForCreation {
     private String path;
     private String content;
     
+    /**
+     * File for creation constructor
+     * @param path
+     * @param content 
+     */
     public FileForCreation(String path, String content) {
         this.path = path;
         this.content = content;
     }
     
+    /**
+     * 
+     * @return the current path value
+     */
     public String getPath() {
         return this.path;
     }
     
+    /**
+     * 
+     * @param path value to set in this object
+     */
     public void setPath(String path) {
         this.path = path;
     }
     
+    /**
+     * 
+     * @return the current content value
+     */
     public String getContent() {
         return this.content;
-    }
+    }    
     
+    /**
+     * 
+     * @param content value to set in this object
+     */
     public void setContent(String content) {
         this.content = content;
     }

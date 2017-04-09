@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 NewType.
+ * Copyright 2017 Ariel.Lenis.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,16 +30,27 @@ import java.util.Scanner;
 
 /**
  *
- * @author NewType
+ * @author Ariel.Lenis
  */
 public class FileTools { 
     
+    /**
+     * Writes the content string inside the target file.
+     * @param file
+     * @param content
+     * @throws FileNotFoundException 
+     */
     public static void writeFile(File file, String content) throws FileNotFoundException {
         try (PrintWriter writer = new PrintWriter(file)) {
             writer.write(content);
         }
     }
     
+    /**
+     * Get the file content as String
+     * @param file
+     * @return 
+     */
     public static String getFileContent(File file) {
         StringBuilder result = new StringBuilder("");
         

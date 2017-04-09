@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 NewType.
+ * Copyright 2017 Ariel.Lenis.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,7 @@ import java.io.PrintStream;
 
 /**
  *
- * @author NewType
+ * @author Ariel.Lenis
  */
 public abstract class ManagerBase {
     protected PrintStream logger;
@@ -41,6 +41,6 @@ public abstract class ManagerBase {
     }
     
     protected void prettyLog(String message) {
-        this.log("### " + message);
+        this.log("[DotNetScript] " + message);
     }
 }

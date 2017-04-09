@@ -1,8 +1,4 @@
 package com.dotnetscript.main;
-import com.dotnetscript.tools.FileTools;
-import com.dotnetscript.tools.JsonTools;
-import com.dotnetscript.tools.StringTools;
-import hudson.EnvVars;
 import hudson.Launcher;
 import hudson.Extension;
 import hudson.model.AbstractBuild;
@@ -10,8 +6,6 @@ import hudson.util.FormValidation;
 import hudson.model.AbstractProject;
 import hudson.tasks.Builder;
 import hudson.tasks.BuildStepDescriptor;
-import java.io.File;
-import java.io.FileNotFoundException;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
@@ -19,18 +13,11 @@ import org.kohsuke.stapler.QueryParameter;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Iterator;
-import org.apache.commons.io.FileUtils;
-import org.jenkinsci.lib.envinject.EnvInjectException;
-import org.jenkinsci.plugins.envinject.EnvInjectBuilder;
 import hudson.model.BuildListener;
 import hudson.model.Result;
 import java.io.PrintStream;
 import java.io.Serializable;
 import javax.annotation.Nonnull;
-import java.util.Map;
 
 /**
  * Sample {@link Builder}.
@@ -50,11 +37,19 @@ import java.util.Map;
  */
 public class DotNetCoreRunner extends Builder implements Serializable {
 
+    private static final long serialVersionUID = -5887659218408478442L;
+
     private BuildListener currentListener;
     private final String targetCode;
     private final String additionalPackages;
 
     // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
+    
+    /**
+     * The main DotNetCoreRunner constructor
+     * @param targetCode
+     * @param additionalPackages 
+     */
     @DataBoundConstructor
     public DotNetCoreRunner(String targetCode, String additionalPackages) {
         this.targetCode = targetCode;
@@ -69,17 +64,16 @@ public class DotNetCoreRunner extends Builder implements Serializable {
         return this.targetCode;
     }
     
+    /**
+     * We'll use this from the {@code config.jelly}
+     * @return 
+     */
     public String getAdditionalPackages() {
         if (this.additionalPackages == null) {
             return "";
         }
         return this.additionalPackages;
-    }
-    
-    private void println(String message) {
-        this.currentListener.getLogger().println(message);        
-    }
-            
+    }       
 
     /**
      *
@@ -98,7 +92,7 @@ public class DotNetCoreRunner extends Builder implements Serializable {
         DotNetScriptPluginFacade dotNetScriptFacade = new DotNetScriptPluginFacade(targetLogger, build, launcher, listener);
         
         try {
-            dotNetScriptFacade.RunAll(this.getTargetCode(), this.getAdditionalPackages());  
+            dotNetScriptFacade.runAll(this.getTargetCode(), this.getAdditionalPackages());  
         } catch (Exception error) {
             error.printStackTrace(targetLogger);
             build.setResult(Result.FAILURE);            
@@ -106,16 +100,14 @@ public class DotNetCoreRunner extends Builder implements Serializable {
         
         return true;
     }
-
-    public String getResourceFileContent(String fileName) {
-	ClassLoader classLoader = getClass().getClassLoader();
-	File file = new File(classLoader.getResource(fileName).getFile());
-        return FileTools.getFileContent(file);
-    }    
     
     // Overridden for better type safety.
     // If your plugin doesn't really define any property on Descriptor,
     // you don't have to do this.
+    /**
+     * Gets the current description
+     * @return 
+     */
     @Override
     public DescriptorImpl getDescriptor() {
         return (DescriptorImpl)super.getDescriptor();
@@ -132,7 +124,7 @@ public class DotNetCoreRunner extends Builder implements Serializable {
     @Extension // This indicates to Jenkins that this is an implementation of an extension point.
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
         
-        private static final String pluginName = "DotNet as Script";
+        private static final String PLUGIN_NAME = "DotNet as Script";
         /**
          * To persist global configuration information,
          * simply store it in a field and call save().
@@ -178,9 +170,10 @@ public class DotNetCoreRunner extends Builder implements Serializable {
 
         /**
          * This human readable name is used in the configuration screen.
+         * @return 
          */
         public String getDisplayName() {
-            return DescriptorImpl.pluginName;
+            return DescriptorImpl.PLUGIN_NAME;
         }
 
         @Override
@@ -199,6 +192,7 @@ public class DotNetCoreRunner extends Builder implements Serializable {
          *
          * The method name is bit awkward because global.jelly calls this method to determine
          * the initial state of the checkbox by the naming convention.
+         * @return 
          */
         public boolean getUseFrench() {
             return useFrench;

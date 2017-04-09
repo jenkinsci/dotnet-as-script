@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 NewType.
+ * Copyright 2017 Ariel.Lenis.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,10 +30,16 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  *
- * @author NewType
+ * @author Ariel.Lenis
  */
 public class StringTools {
-        
+    /**
+     * Gets an 16 digits string Id using th SHA-1 algorithm
+     * @param code
+     * @return
+     * @throws NoSuchAlgorithmException
+     * @throws UnsupportedEncodingException 
+     */
     public static String getStringIdentificator(String code) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest crypt = MessageDigest.getInstance("SHA-1");
         crypt.reset();

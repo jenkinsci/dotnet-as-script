@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 NewType.
+ * Copyright 2017 Ariel.Lenis.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,7 @@ import org.apache.commons.io.FileUtils;
 
 /**
  *
- * @author NewType
+ * @author Ariel.Lenis
  */
 public class DotNetCommandLineManager extends ManagerBase {
     String projectName;
@@ -47,6 +47,7 @@ public class DotNetCommandLineManager extends ManagerBase {
     
     /**
      * 
+     * @param logger
      * @param launcher
      * @param env
      * @param listener
@@ -89,6 +90,12 @@ public class DotNetCommandLineManager extends ManagerBase {
         return result == 0;
     }
     
+    /**
+     * Restores the DOTNET packages
+     * @return
+     * @throws IOException
+     * @throws InterruptedException 
+     */
     public boolean restoreDependencies() throws IOException, InterruptedException
     {
         List<String> argsCreate = Arrays.asList("dotnet", "restore");
@@ -102,10 +109,21 @@ public class DotNetCommandLineManager extends ManagerBase {
         return result == 0;
     }
     
+    /**
+     * Gets the current project folder
+     * @return 
+     */
     public File getProjectFolder() {
         return new File(this.targetWorkspace, this.projectName);
     }
 
+    /**
+     * Adds a package to the project with the last version
+     * @param packageName
+     * @return
+     * @throws IOException
+     * @throws InterruptedException 
+     */
     public boolean addPackage(String packageName) throws IOException, InterruptedException {
         List<String> argsCreate = Arrays.asList("dotnet", "add", "package", packageName);
         
@@ -118,6 +136,14 @@ public class DotNetCommandLineManager extends ManagerBase {
         return result == 0;
     }
     
+    /**
+     * Adds a package to the project with the specific version
+     * @param packageName
+     * @param version
+     * @return
+     * @throws IOException
+     * @throws InterruptedException 
+     */
     public boolean addPackage(String packageName, String version) throws IOException, InterruptedException {
         List<String> argsCreate = Arrays.asList("dotnet", "add", "package", packageName, "-v", version);
         
@@ -130,7 +156,12 @@ public class DotNetCommandLineManager extends ManagerBase {
         return result == 0;
     }
     
-    
+    /**
+     * Builds the current dotnet project
+     * @return
+     * @throws IOException
+     * @throws InterruptedException 
+     */
     public boolean build() throws IOException, InterruptedException {
         List<String> argsCreate = Arrays.asList("dotnet", "build");
         
@@ -143,6 +174,12 @@ public class DotNetCommandLineManager extends ManagerBase {
         return result == 0;
     }
     
+    /**
+     * Runs the current dotnet project
+     * @return
+     * @throws IOException
+     * @throws InterruptedException 
+     */
     public boolean run() throws IOException, InterruptedException
     {
         List<String> argsCreate = Arrays.asList("dotnet", "run");

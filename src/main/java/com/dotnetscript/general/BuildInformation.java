@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 NewType.
+ * Copyright 2017 Ariel.Lenis.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,7 @@ import net.sf.json.JSONObject;
 
 /**
  *
- * @author NewType
+ * @author Ariel.Lenis
  */
 public class BuildInformation {
     
@@ -35,7 +35,7 @@ public class BuildInformation {
     private String packagesHash;
     
     /**
-     * Load the build information from a json string
+     * Load the build information from a JSON string
      * @param json
      * @return 
      */
@@ -58,6 +58,10 @@ public class BuildInformation {
         return newOne;
     }
     
+    /**
+     * Gets the current object as a JSON string
+     * @return the JSON string that represent this object
+     */
     public String getAsJson() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("buildNumber", this.buildNumber);

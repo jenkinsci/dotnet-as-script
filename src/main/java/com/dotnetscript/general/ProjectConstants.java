@@ -3,7 +3,7 @@ package com.dotnetscript.general;
 /*
  * The MIT License
  *
- * Copyright 2017 NewType.
+ * Copyright 2017 Ariel.Lenis.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,10 +26,21 @@ package com.dotnetscript.general;
 
 /**
  *
- * @author NewType
+ * @author Ariel.Lenis
  */
 public class ProjectConstants {
+    /**
+     * The target folder name to create inside the unique folder
+     */
     public static final String PROJECT_FOLDER_NAME = "dotscript";
+    
+    /**
+     * The file that will store the last build information
+     */
     public static final String BUILD_INFORMATION_FILE = ".buildInformation";
+    
+    /**
+     * The cache folder name that contains all the unique folders
+     */
     public static final String CACHE_FOLDER_NAME = ".dotscript";
 }

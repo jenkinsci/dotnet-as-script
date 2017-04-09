@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 NewType.
+ * Copyright 2017 Ariel.Lenis.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +39,7 @@ import java.util.Map;
 
 /**
  *
- * @author NewType
+ * @author Ariel.Lenis
  */
 public class DotNetProjectManager extends ManagerBase {
     private final DotNetCommandLineManager commandLine;
@@ -52,8 +52,12 @@ public class DotNetProjectManager extends ManagerBase {
     private final int buildNumber;
     
     /**
-     * 
-     * @param commandLine 
+     * The project manager constructor
+     * @param logger
+     * @param buildNumber
+     * @param commandLine
+     * @param targetPackages
+     * @param projectFolder 
      */
     public DotNetProjectManager(PrintStream logger, int buildNumber, DotNetCommandLineManager commandLine, DotNetPackagesManager targetPackages, File projectFolder) {
         super(logger);
@@ -61,12 +65,15 @@ public class DotNetProjectManager extends ManagerBase {
         this.buildNumber = buildNumber;
         this.commandLine = commandLine;
         this.projectFolder = projectFolder;
-        this.filesToCreate = new ArrayList<FileForCreation>();
+        this.filesToCreate = new ArrayList<>();
         this.packages = targetPackages;
         this.buildInformationFile = new File(projectFolder, ProjectConstants.BUILD_INFORMATION_FILE);
         this.buildInformationManager = new BuildInformationManager(this.logger, this.buildInformationFile);
     }
     
+    /**
+     * Prepares the packages
+     */
     private void preparePackages() {  
         for(String requiredPackage : this.additionalPackages) {
             if (!this.packages.contains(requiredPackage)) {
@@ -75,6 +82,12 @@ public class DotNetProjectManager extends ManagerBase {
         }
     }
     
+    /**
+     * Determine if this project needs be recreated
+     * @return
+     * @throws NoSuchAlgorithmException
+     * @throws UnsupportedEncodingException 
+     */
     public boolean needsRecreation() throws NoSuchAlgorithmException, UnsupportedEncodingException {
         if (!this.projectFolder.exists() || !this.buildInformationFile.exists()) {
             logger.println("#### The project folder and/or the build information file doesn't exists.");
@@ -89,6 +102,13 @@ public class DotNetProjectManager extends ManagerBase {
         return false;
     }
     
+    /**
+     * Create the project
+     * @throws NoSuchAlgorithmException
+     * @throws UnsupportedEncodingException
+     * @throws IOException
+     * @throws InterruptedException 
+     */
     public void createProject() throws NoSuchAlgorithmException, UnsupportedEncodingException, IOException, InterruptedException {
         if (this.needsRecreation()) {
             logger.println("#### The project needs recreation.");
@@ -103,15 +123,31 @@ public class DotNetProjectManager extends ManagerBase {
         }
     }
     
+    /**
+     * Build the project
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws NoSuchAlgorithmException 
+     */
     public void buildProject() throws IOException, InterruptedException, NoSuchAlgorithmException {
         this.commandLine.build();
         this.updateBuildInformation();
     }
     
+    /**
+     * Run the project
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws NoSuchAlgorithmException 
+     */
     public void runProject() throws IOException, InterruptedException, NoSuchAlgorithmException {
         this.commandLine.run();
     }
     
+    /**
+     * Write the target files to the project
+     * @throws FileNotFoundException 
+     */
     private void writeFiles() throws FileNotFoundException {
         for(FileForCreation fileForCreation : this.filesToCreate) {
             File targetPath = new File(this.projectFolder, fileForCreation.getPath());
@@ -121,6 +157,11 @@ public class DotNetProjectManager extends ManagerBase {
         }
     }
     
+    /**
+     * Add the packages to the project
+     * @throws IOException
+     * @throws InterruptedException 
+     */
     private void addPackages() throws IOException, InterruptedException {
         for(Map.Entry<String, String> thePackage : this.packages.getPackagesMap().entrySet()) {
             String packageName = thePackage.getKey();
@@ -134,34 +175,65 @@ public class DotNetProjectManager extends ManagerBase {
         }        
     }
     
+    /**
+     * Restore the packages to the project
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws InterruptedException 
+     */
     private void restorePackages() throws IOException, InterruptedException, InterruptedException {
         this.commandLine.restoreDependencies();
     }
     
+    /**
+     * Create a default project
+     * @throws IOException
+     * @throws InterruptedException 
+     */
     private void createDefaultProject() throws IOException, InterruptedException {
         this.commandLine.createProject();
     }
     
+    /**
+     * Recreate the project folder
+     */
     public void recreateProjectFolder() {
         this.deleteProjectFolder();
         this.createProjectFolder();
     }
     
+    /**
+     * Delete the project folder
+     */
     private void deleteProjectFolder() {
         if (this.projectFolder.exists()) {
             this.projectFolder.delete();
         }            
     }
     
+    /**
+     * Create the project folder
+     */
     private void createProjectFolder() {
         this.projectFolder.mkdir();
     }
     
+    /**
+     * Register a file for creation inside the project
+     * @param relativePath
+     * @param content 
+     */
     public void addFileForCreation(String relativePath, String content) {
         FileForCreation newOne = new FileForCreation(relativePath, content);
         this.filesToCreate.add(newOne);
     }
 
+    /**
+     * Update the build information for future runs
+     * @throws NoSuchAlgorithmException
+     * @throws UnsupportedEncodingException
+     * @throws FileNotFoundException 
+     */
     private void updateBuildInformation() throws NoSuchAlgorithmException, UnsupportedEncodingException, FileNotFoundException {
         BuildInformation buildInformation = this.buildInformationManager.getBuildInformation();
         
