@@ -23,16 +23,15 @@
  */
 package com.dotnetscript.managers;
 
+import com.dotnetscript.general.NodeFile;
+import com.dotnetscript.tools.FileTools;
 import hudson.EnvVars;
-import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.TaskListener;
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
-import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -42,7 +41,7 @@ public class DotNetCommandLineManager extends ManagerBase {
     String projectName;
     Launcher launcher;
     EnvVars env;
-    File targetWorkspace;
+    NodeFile targetWorkspace;
     TaskListener listener;
     
     /**
@@ -56,7 +55,7 @@ public class DotNetCommandLineManager extends ManagerBase {
      * @throws IOException
      * @throws InterruptedException 
      */
-    public DotNetCommandLineManager(PrintStream logger, Launcher launcher, EnvVars env, TaskListener listener, File targetWorkspace, String projectName) throws IOException, InterruptedException {
+    public DotNetCommandLineManager(PrintStream logger, Launcher launcher, EnvVars env, TaskListener listener, NodeFile targetWorkspace, String projectName) throws IOException, InterruptedException {
         super(logger);
 
         this.launcher = launcher;
@@ -64,6 +63,10 @@ public class DotNetCommandLineManager extends ManagerBase {
         this.env = env;
         this.targetWorkspace = targetWorkspace;
         this.listener = listener;
+    }
+    
+    private String getDotNetExecutable() {
+        return "dotnet";
     }
     
     /**
@@ -74,16 +77,16 @@ public class DotNetCommandLineManager extends ManagerBase {
      */
     public boolean createProject() throws IOException, InterruptedException
     {
-        List<String> argsCreate = Arrays.asList("dotnet", "new", "console", "-n", this.projectName);
+        List<String> argsCreate = Arrays.asList(this.getDotNetExecutable(), "new", "console", "-n", this.projectName);
         
-        File projectFolder = this.getProjectFolder();
+        NodeFile projectFolder = this.getProjectFolder();
         
         if (projectFolder.exists())
         {
-            if (projectFolder.isFile())
-                projectFolder.delete();
+            if (projectFolder.isDirectory())
+                FileTools.deleteDirectory(projectFolder);
             else
-                FileUtils.deleteDirectory(projectFolder);
+                projectFolder.delete();                
         }
         
         int result = this.executeArgs(argsCreate, this.targetWorkspace);        
@@ -98,9 +101,9 @@ public class DotNetCommandLineManager extends ManagerBase {
      */
     public boolean restoreDependencies() throws IOException, InterruptedException
     {
-        List<String> argsCreate = Arrays.asList("dotnet", "restore");
+        List<String> argsCreate = Arrays.asList(this.getDotNetExecutable(), "restore");
         
-        File projectFolder = this.getProjectFolder();
+        NodeFile projectFolder = this.getProjectFolder();
         
         if (!projectFolder.exists())
             return false;
@@ -113,8 +116,8 @@ public class DotNetCommandLineManager extends ManagerBase {
      * Gets the current project folder
      * @return 
      */
-    public File getProjectFolder() {
-        return new File(this.targetWorkspace, this.projectName);
+    public NodeFile getProjectFolder() {
+        return new NodeFile(this.targetWorkspace, this.projectName);
     }
 
     /**
@@ -125,9 +128,9 @@ public class DotNetCommandLineManager extends ManagerBase {
      * @throws InterruptedException 
      */
     public boolean addPackage(String packageName) throws IOException, InterruptedException {
-        List<String> argsCreate = Arrays.asList("dotnet", "add", "package", packageName);
+        List<String> argsCreate = Arrays.asList(this.getDotNetExecutable(), "add", "package", packageName);
         
-        File projectFolder = this.getProjectFolder();
+        NodeFile projectFolder = this.getProjectFolder();
         
         if (!projectFolder.exists())
             return false;
@@ -145,9 +148,9 @@ public class DotNetCommandLineManager extends ManagerBase {
      * @throws InterruptedException 
      */
     public boolean addPackage(String packageName, String version) throws IOException, InterruptedException {
-        List<String> argsCreate = Arrays.asList("dotnet", "add", "package", packageName, "-v", version);
+        List<String> argsCreate = Arrays.asList(this.getDotNetExecutable(), "add", "package", packageName, "-v", version);
         
-        File projectFolder = this.getProjectFolder();
+        NodeFile projectFolder = this.getProjectFolder();
         
         if (!projectFolder.exists())
             return false;
@@ -157,15 +160,15 @@ public class DotNetCommandLineManager extends ManagerBase {
     }
     
     /**
-     * Builds the current dotnet project
+     * Builds the current DOTNET project
      * @return
      * @throws IOException
      * @throws InterruptedException 
      */
     public boolean build() throws IOException, InterruptedException {
-        List<String> argsCreate = Arrays.asList("dotnet", "build");
+        List<String> argsCreate = Arrays.asList(this.getDotNetExecutable(), "build");
         
-        File projectFolder = this.getProjectFolder();
+        NodeFile projectFolder = this.getProjectFolder();
         
         if (!projectFolder.exists())
             return false;
@@ -175,16 +178,16 @@ public class DotNetCommandLineManager extends ManagerBase {
     }
     
     /**
-     * Runs the current dotnet project
+     * Runs the current DOTNET project
      * @return
      * @throws IOException
      * @throws InterruptedException 
      */
     public boolean run() throws IOException, InterruptedException
     {
-        List<String> argsCreate = Arrays.asList("dotnet", "run");
+        List<String> argsCreate = Arrays.asList(this.getDotNetExecutable(), "run");
         
-        File projectFolder = this.getProjectFolder();
+        NodeFile projectFolder = this.getProjectFolder();
         
         if (!projectFolder.exists())
             return false;
@@ -193,14 +196,14 @@ public class DotNetCommandLineManager extends ManagerBase {
         return result == 0;
     }
     
-    private int executeArgs(List<String> args, File targetDirectory) throws IOException, InterruptedException
+    private int executeArgs(List<String> args, NodeFile targetDirectory) throws IOException, InterruptedException
     {
         return this.launcher
                 .launch()
                 .cmds(args)
                 .envs(this.env)
                 .stdout(this.listener)
-                .pwd(new FilePath(targetDirectory))
+                .pwd(targetDirectory.getFilePath())
                 .join();        
     }
     

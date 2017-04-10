@@ -26,8 +26,8 @@ package com.dotnetscript.managers;
 import com.dotnetscript.general.FileForCreation;
 import com.dotnetscript.general.ProjectConstants;
 import com.dotnetscript.general.BuildInformation;
+import com.dotnetscript.general.NodeFile;
 import com.dotnetscript.tools.FileTools;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -45,8 +45,8 @@ public class DotNetProjectManager extends ManagerBase {
     private final DotNetCommandLineManager commandLine;
     private final List<FileForCreation> filesToCreate;
     private final DotNetPackagesManager packages;
-    private final File projectFolder;
-    private final File buildInformationFile;
+    private final NodeFile projectFolder;
+    private final NodeFile buildInformationFile;
     private final String[] additionalPackages = new String[]{"Newtonsoft.Json"};  
     private final BuildInformationManager buildInformationManager;
     private final int buildNumber;
@@ -59,7 +59,7 @@ public class DotNetProjectManager extends ManagerBase {
      * @param targetPackages
      * @param projectFolder 
      */
-    public DotNetProjectManager(PrintStream logger, int buildNumber, DotNetCommandLineManager commandLine, DotNetPackagesManager targetPackages, File projectFolder) {
+    public DotNetProjectManager(PrintStream logger, int buildNumber, DotNetCommandLineManager commandLine, DotNetPackagesManager targetPackages, NodeFile projectFolder) {
         super(logger);
         
         this.buildNumber = buildNumber;
@@ -67,7 +67,7 @@ public class DotNetProjectManager extends ManagerBase {
         this.projectFolder = projectFolder;
         this.filesToCreate = new ArrayList<>();
         this.packages = targetPackages;
-        this.buildInformationFile = new File(projectFolder, ProjectConstants.BUILD_INFORMATION_FILE);
+        this.buildInformationFile = new NodeFile(projectFolder, ProjectConstants.BUILD_INFORMATION_FILE);
         this.buildInformationManager = new BuildInformationManager(this.logger, this.buildInformationFile);
     }
     
@@ -87,8 +87,9 @@ public class DotNetProjectManager extends ManagerBase {
      * @return
      * @throws NoSuchAlgorithmException
      * @throws UnsupportedEncodingException 
+     * @throws java.lang.InterruptedException 
      */
-    public boolean needsRecreation() throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    public boolean needsRecreation() throws NoSuchAlgorithmException, UnsupportedEncodingException, IOException, InterruptedException {
         if (!this.projectFolder.exists() || !this.buildInformationFile.exists()) {
             logger.println("#### The project folder and/or the build information file doesn't exists.");
             return true;
@@ -148,9 +149,9 @@ public class DotNetProjectManager extends ManagerBase {
      * Write the target files to the project
      * @throws FileNotFoundException 
      */
-    private void writeFiles() throws FileNotFoundException {
+    private void writeFiles() throws FileNotFoundException, IOException, InterruptedException {
         for(FileForCreation fileForCreation : this.filesToCreate) {
-            File targetPath = new File(this.projectFolder, fileForCreation.getPath());
+            NodeFile targetPath = new NodeFile(this.projectFolder, fileForCreation.getPath());
             String content = fileForCreation.getContent();
             
             FileTools.writeFile(targetPath, content);
@@ -196,8 +197,10 @@ public class DotNetProjectManager extends ManagerBase {
     
     /**
      * Recreate the project folder
+     * @throws java.io.IOException
+     * @throws java.lang.InterruptedException
      */
-    public void recreateProjectFolder() {
+    public void recreateProjectFolder() throws IOException, InterruptedException {
         this.deleteProjectFolder();
         this.createProjectFolder();
     }
@@ -205,7 +208,7 @@ public class DotNetProjectManager extends ManagerBase {
     /**
      * Delete the project folder
      */
-    private void deleteProjectFolder() {
+    private void deleteProjectFolder() throws IOException, InterruptedException {
         if (this.projectFolder.exists()) {
             this.projectFolder.delete();
         }            
@@ -214,7 +217,7 @@ public class DotNetProjectManager extends ManagerBase {
     /**
      * Create the project folder
      */
-    private void createProjectFolder() {
+    private void createProjectFolder() throws IOException, InterruptedException {
         this.projectFolder.mkdir();
     }
     
@@ -234,7 +237,7 @@ public class DotNetProjectManager extends ManagerBase {
      * @throws UnsupportedEncodingException
      * @throws FileNotFoundException 
      */
-    private void updateBuildInformation() throws NoSuchAlgorithmException, UnsupportedEncodingException, FileNotFoundException {
+    private void updateBuildInformation() throws NoSuchAlgorithmException, UnsupportedEncodingException, FileNotFoundException, IOException, InterruptedException {
         BuildInformation buildInformation = this.buildInformationManager.getBuildInformation();
         
         if (buildInformation == null) {

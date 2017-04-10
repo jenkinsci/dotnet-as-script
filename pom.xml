@@ -10,7 +10,7 @@
     <relativePath/>
   </parent>
   <groupId>com.dotNetScript</groupId>
-  <artifactId>dotNetScript</artifactId>
+  <artifactId>dotnet-as-script</artifactId>
   <version>1.0</version>
   <packaging>hpi</packaging>
 
@@ -28,7 +28,7 @@
     -->
   </properties>
 
-  <name>dotNetScript</name>
+  <name>DotNet as Script</name>
   <description>This jenkins plugin able you to run c# code as a build step.</description>
   <url>https://wiki.jenkins-ci.org/display/JENKINS/TODO+Plugin</url>
 

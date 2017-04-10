@@ -24,9 +24,10 @@
 package com.dotnetscript.managers;
 
 import com.dotnetscript.general.BuildInformation;
+import com.dotnetscript.general.NodeFile;
 import com.dotnetscript.tools.FileTools;
-import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
 
 /**
@@ -34,7 +35,7 @@ import java.io.PrintStream;
  * @author Ariel.Lenis
  */
 public class BuildInformationManager extends ManagerBase {
-    private final File buildInformationFile;
+    private final NodeFile buildInformationFile;
     private boolean isInformationLoaded;
     private BuildInformation buildInformation;
     
@@ -43,7 +44,7 @@ public class BuildInformationManager extends ManagerBase {
      * @param logger
      * @param buildInformationFile 
      */
-    public BuildInformationManager(PrintStream logger, File buildInformationFile) {
+    public BuildInformationManager(PrintStream logger, NodeFile buildInformationFile) {
         super(logger);
         
         this.isInformationLoaded = false;
@@ -51,7 +52,7 @@ public class BuildInformationManager extends ManagerBase {
         this.buildInformation = null;
     }
     
-    private boolean buildInformationExists() {
+    private boolean buildInformationExists() throws IOException, InterruptedException {
         return this.buildInformationFile.exists();
     }
     
@@ -61,8 +62,10 @@ public class BuildInformationManager extends ManagerBase {
     
     /**
      * Reload the build information based in the build information file
+     * @throws java.io.IOException
+     * @throws java.lang.InterruptedException
      */
-    public void reloadInformation() {
+    public void reloadInformation() throws IOException, InterruptedException, InterruptedException {
         String json = FileTools.getFileContent(this.buildInformationFile);
         this.buildInformation = BuildInformation.loadFromJson(json);
         this.isInformationLoaded = true;        
@@ -73,7 +76,7 @@ public class BuildInformationManager extends ManagerBase {
      * @param packagesHash
      * @return 
      */
-    public boolean needsRecreation(String packagesHash) {
+    public boolean needsRecreation(String packagesHash) throws IOException, InterruptedException, InterruptedException {
         if (!this.buildInformationExists()) {
             this.prettyLog("The build information file doesn't exists.");
             return true;
@@ -110,7 +113,7 @@ public class BuildInformationManager extends ManagerBase {
         this.buildInformation = buildInformation;
     }
     
-    public void saveBuildInformation() throws FileNotFoundException {
+    public void saveBuildInformation() throws FileNotFoundException, IOException, InterruptedException {
         String json = this.buildInformation.getAsJson();
         FileTools.writeFile(buildInformationFile, json);
     }

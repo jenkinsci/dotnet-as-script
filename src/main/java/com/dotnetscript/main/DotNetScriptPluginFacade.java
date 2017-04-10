@@ -23,6 +23,7 @@
  */
 package com.dotnetscript.main;
 
+import com.dotnetscript.general.NodeFile;
 import com.dotnetscript.general.ProjectConstants;
 import com.dotnetscript.managers.DotNetCommandLineManager;
 import com.dotnetscript.managers.DotNetPackagesManager;
@@ -41,7 +42,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
 import javax.annotation.Nonnull;
 import net.sf.json.JSONObject;
-import org.apache.commons.io.FileUtils;
 import org.jenkinsci.lib.envinject.EnvInjectException;
 import org.jenkinsci.plugins.envinject.EnvInjectBuilder;
 
@@ -53,7 +53,7 @@ public class DotNetScriptPluginFacade {
     private final AbstractBuild<?, ?> build;
     private final Launcher launcher;
     private final BuildListener listener;
-    private final File workspaceFolder;
+    private final NodeFile workspaceFolder;
     private final PrintStream logger;
     
     /**
@@ -70,7 +70,7 @@ public class DotNetScriptPluginFacade {
         this.build = build;
         this.launcher = launcher;
         this.listener = listener;
-        this.workspaceFolder = new File(build.getWorkspace().toURI());
+        this.workspaceFolder = new NodeFile(build.getWorkspace());
     }
     
     /**
@@ -105,17 +105,17 @@ public class DotNetScriptPluginFacade {
      * @throws EnvInjectException 
      */
     public void runAll(String targetCode, String targetPackagesJson) throws IOException, InterruptedException, NoSuchAlgorithmException, EnvInjectException {
-        File dotScriptWorkspace = new File(this.workspaceFolder, ProjectConstants.CACHE_FOLDER_NAME);
+        NodeFile dotScriptWorkspace = new NodeFile(this.workspaceFolder, ProjectConstants.CACHE_FOLDER_NAME);
         
         DotNetPackagesManager dotNetPackages = new DotNetPackagesManager(this.logger, targetPackagesJson);                
         
         String uniqueFolderName = this.getUniqueFolderName(targetCode);        
-        File uniqueFolder = new File(dotScriptWorkspace, uniqueFolderName);
+        NodeFile uniqueFolder = new NodeFile(dotScriptWorkspace, uniqueFolderName);
 
         EnvVars env = this.build.getEnvironment(this.listener);
         DotNetCommandLineManager dotNetCommandLine = new DotNetCommandLineManager(this.logger, this.launcher, env, this.listener, uniqueFolder, ProjectConstants.PROJECT_FOLDER_NAME);
         
-        File currentProjectFolder = new File(uniqueFolder, ProjectConstants.PROJECT_FOLDER_NAME);        
+        NodeFile currentProjectFolder = new NodeFile(uniqueFolder, ProjectConstants.PROJECT_FOLDER_NAME);        
         DotNetProjectManager projectManager = new DotNetProjectManager(this.logger, build.getNumber(), dotNetCommandLine, dotNetPackages, currentProjectFolder);
         
         projectManager.addFileForCreation("JenkinsExecutor.cs", this.getResourceFileContent("com/dotnetscript/resources/JenkinsExecutor.cs"));
@@ -131,7 +131,7 @@ public class DotNetScriptPluginFacade {
         projectManager.buildProject();
         projectManager.runProject();
         
-        File resultsFile = new File(currentProjectFolder, "jenkinsExecution.json");
+        NodeFile resultsFile = new NodeFile(currentProjectFolder, "jenkinsExecution.json");
         
         this.processResultFile(resultsFile, build, launcher, env, listener);                
     }
@@ -147,9 +147,10 @@ public class DotNetScriptPluginFacade {
      * @throws EnvInjectException
      * @throws InterruptedException 
      */
-    private void processResultFile(File resultsFile, AbstractBuild<?,?> build, Launcher launcher, EnvVars env, BuildListener listener) throws IOException, EnvInjectException, InterruptedException { 
+    private void processResultFile(NodeFile resultsFile, AbstractBuild<?,?> build, Launcher launcher, EnvVars env, BuildListener listener) throws IOException, EnvInjectException, InterruptedException { 
         
-        String theJson = FileUtils.readFileToString(resultsFile, "utf-8");
+        //String theJson = FileUtils.readFileToString(resultsFile, "utf-8");
+        String theJson = FileTools.getFileContent(resultsFile);
         JSONObject jsonObject = JSONObject.fromObject(theJson);
         
         String environmentPath = null;

@@ -2,35 +2,63 @@
     Your c# code to execute, the plugin will rebuild your code if detect some change.
     
     These are some examples of the target code for this plugin:
-
     <br>
-    <div>
-        <!-- code formatted by http://manoli.net/csharpformat/ -->
-        <pre class="csharpcode">
-        <span class="rem">// Complete example</span>
-        <span class="kwrd">using</span> DotNetTools.Jenkins;
-        <span class="kwrd">using</span> System;        
+    <br>
+    <ul>
+        <li>
+            Simple example:
+            <br>
+            <br>
+            <div style='font-size: small; color: black; font-family: Consolas, "Courier New", Courier, Monospace;'>
+            <!-- code formatted by http://manoli.net/csharpformat/ -->
+            <pre style="margin: 0em;">
+            <span style="color: #008000;">//Simple Example</span>
+            <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> JenkinsPlugin
+            {
+                <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> ScriptMain()
+                {
+                    Console.WriteLine(<span style="color: #a31515;">"Hello World from c#!!!"</span>);
+                }
+            } </pre>
+            </div>  
+            <br>            
+        </li>
+        <li>
+            Saving environment variables:
+            <br>
+            <br>
+            <div style='font-size: small; color: black; font-family: Consolas, "Courier New", Courier, Monospace;'>
+            <!-- code formatted by http://manoli.net/csharpformat/ -->
+            <pre style="margin: 0em;">
+            <span style="color: #008000;">// Complete example</span>
+            <span style="color: #0000ff;">using</span> DotNetTools.Jenkins;
+            <span style="color: #0000ff;">using</span> System;        
 
-        <span class="kwrd">public</span> <span class="kwrd">class</span> JenkinsPlugin
-        {
-            <span class="kwrd">public</span> <span class="kwrd">static</span> <span class="kwrd">void</span> DotScriptMain(JenkinsManager manager)
+            <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> JenkinsPlugin
             {
-                Console.WriteLine(<span class="str">"######## c# code !!!"</span>);
-                manager.SetSessionEnv(<span class="str">"PI"</span>, Math.PI.ToString());
-            }
-        }</pre>
-    </div>
-    <br><br>
-    <div>
-        <!-- code formatted by http://manoli.net/csharpformat/ -->
-        <pre class="csharpcode">
-        <span class="rem">//Simple Example</span>
-        <span class="kwrd">public</span> <span class="kwrd">class</span> JenkinsPlugin
-        {
-            <span class="kwrd">public</span> <span class="kwrd">static</span> <span class="kwrd">void</span> DotScriptMain()
-            {
-                Console.WriteLine(<span class="str">"######## c# code !!!"</span>);
-            }
-        } </pre>
-    </div>
+                <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> ScriptMain(JenkinsManager manager)
+                {
+                    Console.WriteLine(<span style="color: #a31515;">"Hello World from c#!!!"</span>);
+                    manager.SetSessionEnv(<span style="color: #a31515;">"PI"</span>, Math.PI.ToString());
+                }
+            }</pre>
+            </div>
+            <br>
+        </li>
+        <li>
+            You can use this two methods from the <strong>DotNetTools.Jenkins.JenkinsManager</strong> class:
+            <br>
+            <br>
+            <div style='font-size: small; color: black; font-family: Consolas, "Courier New", Courier, Monospace;'>
+            <!-- code formatted by http://manoli.net/csharpformat/ -->
+            <pre style="margin: 0em;">
+            <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> SetSessionEnv(<span style="color: #0000ff;">string</span> key, <span style="color: #0000ff;">string</span> value);
+            <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">string</span> GetSessionEnv(<span style="color: #0000ff;">string</span> key);</pre>        
+            </div>
+            <br>
+        </li>
+    </ul>
 </div>
+
+
+	

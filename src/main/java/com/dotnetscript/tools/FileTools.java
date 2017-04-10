@@ -23,8 +23,11 @@
  */
 package com.dotnetscript.tools;
 
+import com.dotnetscript.general.NodeFile;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
@@ -33,7 +36,7 @@ import java.util.Scanner;
  * @author Ariel.Lenis
  */
 public class FileTools { 
-    
+  
     /**
      * Writes the content string inside the target file.
      * @param file
@@ -44,7 +47,21 @@ public class FileTools {
         try (PrintWriter writer = new PrintWriter(file)) {
             writer.write(content);
         }
-    }
+    }    
+    
+    /**
+     * Writes the content string inside the target file.
+     * @param nodeFile
+     * @param content
+     * @throws FileNotFoundException 
+     * @throws java.lang.InterruptedException 
+     */
+    public static void writeFile(NodeFile nodeFile, String content) throws FileNotFoundException, IOException, InterruptedException {
+        OutputStream writeStream = nodeFile.getFilePath().write();
+        try (PrintWriter writer = new PrintWriter(writeStream)) {
+            writer.write(content);
+        }
+    }       
     
     /**
      * Get the file content as String
@@ -68,6 +85,21 @@ public class FileTools {
 	}
 		
 	return result.toString();
-    }  
-
+    } 
+    
+    /**
+     * Get the file content as String
+     * @param nodeFile
+     * @return 
+     * @throws java.io.IOException 
+     * @throws java.lang.InterruptedException 
+     */
+    public static String getFileContent(NodeFile nodeFile) throws IOException, InterruptedException {
+        return nodeFile.getFilePath().readToString();
+    } 
+    
+    public static void deleteDirectory(NodeFile nodeFile) throws IOException, InterruptedException {
+        nodeFile.getFilePath().deleteRecursive();
+    }
+            
 }
