@@ -23,6 +23,8 @@
  */
 package com.dotnetscript.main;
 
+import com.dotnetscript.exceptions.DotNetCommandLineException;
+import com.dotnetscript.exceptions.DotNetPluginException;
 import com.dotnetscript.general.NodeFile;
 import com.dotnetscript.general.ProjectConstants;
 import com.dotnetscript.managers.DotNetCommandLineManager;
@@ -104,7 +106,7 @@ public class DotNetScriptPluginFacade {
      * @throws NoSuchAlgorithmException
      * @throws EnvInjectException 
      */
-    public void runAll(String targetCode, String targetPackagesJson) throws IOException, InterruptedException, NoSuchAlgorithmException, EnvInjectException {
+    public void runAll(String targetCode, String targetPackagesJson) throws IOException, InterruptedException, NoSuchAlgorithmException, EnvInjectException, UnsupportedEncodingException, DotNetPluginException {
         NodeFile dotScriptWorkspace = new NodeFile(this.workspaceFolder, ProjectConstants.CACHE_FOLDER_NAME);
         
         DotNetPackagesManager dotNetPackages = new DotNetPackagesManager(this.logger, targetPackagesJson);                
@@ -127,9 +129,13 @@ public class DotNetScriptPluginFacade {
             uniqueFolder.mkdir();
         }
         
-        projectManager.createProject();
-        projectManager.buildProject();
-        projectManager.runProject();
+        try {
+            projectManager.createProject();
+            projectManager.buildProject();
+            projectManager.runProject();
+        } catch (DotNetCommandLineException error) {
+            throw new DotNetPluginException("Error running the project.", error);
+        }
         
         NodeFile resultsFile = new NodeFile(currentProjectFolder, "jenkinsExecution.json");
         

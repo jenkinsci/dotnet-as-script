@@ -23,6 +23,7 @@
  */
 package com.dotnetscript.managers;
 
+import com.dotnetscript.exceptions.DotNetCommandLineException;
 import com.dotnetscript.general.NodeFile;
 import com.dotnetscript.tools.FileTools;
 import hudson.EnvVars;
@@ -70,12 +71,12 @@ public class DotNetCommandLineManager extends ManagerBase {
     }
     
     /**
-     * 
-     * @return
+     * Creates the DOTNET project
      * @throws IOException
      * @throws InterruptedException 
+     * @throws com.dotnetscript.exceptions.DotNetCommandLineException 
      */
-    public boolean createProject() throws IOException, InterruptedException
+    public void createProject() throws IOException, InterruptedException, DotNetCommandLineException
     {
         List<String> argsCreate = Arrays.asList(this.getDotNetExecutable(), "new", "console", "-n", this.projectName);
         
@@ -90,26 +91,31 @@ public class DotNetCommandLineManager extends ManagerBase {
         }
         
         int result = this.executeArgs(argsCreate, this.targetWorkspace);        
-        return result == 0;
+        if (result != 0) {
+            throw new DotNetCommandLineException("Error at create step.", result);
+        }
     }
     
     /**
      * Restores the DOTNET packages
-     * @return
      * @throws IOException
      * @throws InterruptedException 
+     * @throws com.dotnetscript.exceptions.DotNetCommandLineException 
      */
-    public boolean restoreDependencies() throws IOException, InterruptedException
+    public void restoreDependencies() throws IOException, InterruptedException, DotNetCommandLineException
     {
         List<String> argsCreate = Arrays.asList(this.getDotNetExecutable(), "restore");
         
         NodeFile projectFolder = this.getProjectFolder();
         
-        if (!projectFolder.exists())
-            return false;
+        if (!projectFolder.exists()) {
+            throw new DotNetCommandLineException("The project folder does not exists.");
+        } 
         
         int result = this.executeArgs(argsCreate, projectFolder);        
-        return result == 0;
+        if (result != 0) {
+            throw new DotNetCommandLineException("Error at restore dependencies step.", result);
+        }
     }
     
     /**
@@ -123,79 +129,99 @@ public class DotNetCommandLineManager extends ManagerBase {
     /**
      * Adds a package to the project with the last version
      * @param packageName
-     * @return
      * @throws IOException
      * @throws InterruptedException 
+     * @throws com.dotnetscript.exceptions.DotNetCommandLineException 
      */
-    public boolean addPackage(String packageName) throws IOException, InterruptedException {
+    public void addPackage(String packageName) throws IOException, InterruptedException, DotNetCommandLineException {
         List<String> argsCreate = Arrays.asList(this.getDotNetExecutable(), "add", "package", packageName);
         
         NodeFile projectFolder = this.getProjectFolder();
         
-        if (!projectFolder.exists())
-            return false;
+        if (!projectFolder.exists()) {
+            throw new DotNetCommandLineException("The project folder does not exists.");
+        } 
         
         int result = this.executeArgs(argsCreate, projectFolder);        
-        return result == 0;
+        if (result != 0) {
+            throw new DotNetCommandLineException("Error at add package step.", result);
+        }
     }
     
     /**
      * Adds a package to the project with the specific version
      * @param packageName
      * @param version
-     * @return
      * @throws IOException
      * @throws InterruptedException 
+     * @throws com.dotnetscript.exceptions.DotNetCommandLineException 
      */
-    public boolean addPackage(String packageName, String version) throws IOException, InterruptedException {
+    public void addPackage(String packageName, String version) throws IOException, InterruptedException, DotNetCommandLineException {
         List<String> argsCreate = Arrays.asList(this.getDotNetExecutable(), "add", "package", packageName, "-v", version);
         
         NodeFile projectFolder = this.getProjectFolder();
         
-        if (!projectFolder.exists())
-            return false;
+        if (!projectFolder.exists()) {
+            throw new DotNetCommandLineException("The project folder does not exists.");
+        } 
         
         int result = this.executeArgs(argsCreate, projectFolder);        
-        return result == 0;
+        if (result != 0) {
+            throw new DotNetCommandLineException("Error at add package step.", result);
+        }
     }
     
     /**
      * Builds the current DOTNET project
-     * @return
      * @throws IOException
      * @throws InterruptedException 
+     * @throws com.dotnetscript.exceptions.DotNetCommandLineException 
      */
-    public boolean build() throws IOException, InterruptedException {
+    public void build() throws IOException, InterruptedException, DotNetCommandLineException {
         List<String> argsCreate = Arrays.asList(this.getDotNetExecutable(), "build");
         
         NodeFile projectFolder = this.getProjectFolder();
         
-        if (!projectFolder.exists())
-            return false;
+        if (!projectFolder.exists()) {
+            throw new DotNetCommandLineException("The project folder does not exists.");
+        } 
         
         int result = this.executeArgs(argsCreate, projectFolder);        
-        return result == 0;
+        if (result != 0) {
+            throw new DotNetCommandLineException("Error at build step.", result);
+        }
     }
     
     /**
      * Runs the current DOTNET project
-     * @return
      * @throws IOException
      * @throws InterruptedException 
+     * @throws com.dotnetscript.exceptions.DotNetCommandLineException 
      */
-    public boolean run() throws IOException, InterruptedException
+    public void run() throws IOException, InterruptedException, DotNetCommandLineException
     {
         List<String> argsCreate = Arrays.asList(this.getDotNetExecutable(), "run");
         
         NodeFile projectFolder = this.getProjectFolder();
         
-        if (!projectFolder.exists())
-            return false;
+        if (!projectFolder.exists()) {
+            throw new DotNetCommandLineException("The project folder does not exists.");
+        }            
         
         int result = this.executeArgs(argsCreate, projectFolder);        
-        return result == 0;
+        if (result != 0) {
+            throw new DotNetCommandLineException("Error at run step.", result);
+        }
     }
     
+    /**
+     * Execute the commands
+     * @param args
+     * @param targetDirectory
+     * @return
+     * @throws IOException
+     * @throws InterruptedException 
+     */
     private int executeArgs(List<String> args, NodeFile targetDirectory) throws IOException, InterruptedException
     {
         return this.launcher

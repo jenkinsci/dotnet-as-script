@@ -23,6 +23,7 @@
  */
 package com.dotnetscript.managers;
 
+import com.dotnetscript.exceptions.DotNetCommandLineException;
 import com.dotnetscript.general.FileForCreation;
 import com.dotnetscript.general.ProjectConstants;
 import com.dotnetscript.general.BuildInformation;
@@ -110,7 +111,7 @@ public class DotNetProjectManager extends ManagerBase {
      * @throws IOException
      * @throws InterruptedException 
      */
-    public void createProject() throws NoSuchAlgorithmException, UnsupportedEncodingException, IOException, InterruptedException {
+    public void createProject() throws NoSuchAlgorithmException, UnsupportedEncodingException, IOException, InterruptedException, DotNetCommandLineException {
         if (this.needsRecreation()) {
             logger.println("#### The project needs recreation.");
             this.recreateProjectFolder();
@@ -130,7 +131,7 @@ public class DotNetProjectManager extends ManagerBase {
      * @throws InterruptedException
      * @throws NoSuchAlgorithmException 
      */
-    public void buildProject() throws IOException, InterruptedException, NoSuchAlgorithmException {
+    public void buildProject() throws IOException, InterruptedException, NoSuchAlgorithmException, DotNetCommandLineException {
         this.commandLine.build();
         this.updateBuildInformation();
     }
@@ -141,7 +142,7 @@ public class DotNetProjectManager extends ManagerBase {
      * @throws InterruptedException
      * @throws NoSuchAlgorithmException 
      */
-    public void runProject() throws IOException, InterruptedException, NoSuchAlgorithmException {
+    public void runProject() throws IOException, InterruptedException, NoSuchAlgorithmException, DotNetCommandLineException {
         this.commandLine.run();
     }
     
@@ -163,7 +164,7 @@ public class DotNetProjectManager extends ManagerBase {
      * @throws IOException
      * @throws InterruptedException 
      */
-    private void addPackages() throws IOException, InterruptedException {
+    private void addPackages() throws IOException, InterruptedException, DotNetCommandLineException {
         for(Map.Entry<String, String> thePackage : this.packages.getPackagesMap().entrySet()) {
             String packageName = thePackage.getKey();
             String packageVersion = thePackage.getValue();
@@ -182,7 +183,7 @@ public class DotNetProjectManager extends ManagerBase {
      * @throws InterruptedException
      * @throws InterruptedException 
      */
-    private void restorePackages() throws IOException, InterruptedException, InterruptedException {
+    private void restorePackages() throws IOException, InterruptedException, InterruptedException, DotNetCommandLineException {
         this.commandLine.restoreDependencies();
     }
     
@@ -191,7 +192,7 @@ public class DotNetProjectManager extends ManagerBase {
      * @throws IOException
      * @throws InterruptedException 
      */
-    private void createDefaultProject() throws IOException, InterruptedException {
+    private void createDefaultProject() throws IOException, InterruptedException, DotNetCommandLineException {
         this.commandLine.createProject();
     }
     
