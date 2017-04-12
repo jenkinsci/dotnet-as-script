@@ -24,6 +24,7 @@
 package com.dotnetscript.managers;
 
 import com.dotnetscript.exceptions.DotNetCommandLineException;
+import com.dotnetscript.exceptions.DotNetProjectManagerException;
 import com.dotnetscript.general.FileForCreation;
 import com.dotnetscript.general.ProjectConstants;
 import com.dotnetscript.general.BuildInformation;
@@ -60,7 +61,7 @@ public class DotNetProjectManager extends ManagerBase {
      * @param targetPackages
      * @param projectFolder 
      */
-    public DotNetProjectManager(PrintStream logger, int buildNumber, DotNetCommandLineManager commandLine, DotNetPackagesManager targetPackages, NodeFile projectFolder) {
+    public DotNetProjectManager(PrintStream logger, int buildNumber, DotNetCommandLineManager commandLine, DotNetPackagesManager targetPackages, NodeFile projectFolder) throws IOException, InterruptedException, InterruptedException, DotNetCommandLineException, DotNetProjectManagerException {
         super(logger);
         
         this.buildNumber = buildNumber;
@@ -70,6 +71,8 @@ public class DotNetProjectManager extends ManagerBase {
         this.packages = targetPackages;
         this.buildInformationFile = new NodeFile(projectFolder, ProjectConstants.BUILD_INFORMATION_FILE);
         this.buildInformationManager = new BuildInformationManager(this.logger, this.buildInformationFile);
+        
+        this.validateVersion();
     }
     
     /**
@@ -90,18 +93,28 @@ public class DotNetProjectManager extends ManagerBase {
      * @throws UnsupportedEncodingException 
      * @throws java.lang.InterruptedException 
      */
-    public boolean needsRecreation() throws NoSuchAlgorithmException, UnsupportedEncodingException, IOException, InterruptedException {
+    public boolean needsRecreation() throws NoSuchAlgorithmException, UnsupportedEncodingException, IOException, InterruptedException, DotNetCommandLineException {
         if (!this.projectFolder.exists() || !this.buildInformationFile.exists()) {
             logger.println("#### The project folder and/or the build information file doesn't exists.");
             return true;
         }
         
-        if (this.buildInformationManager.needsRecreation(this.packages.getPackagesHash())) {
+        if (this.buildInformationManager.needsRecreation(this.packages.getPackagesHash(), this.commandLine.getDotNetVersion())) {
             logger.println("#### The packages list changed.");
             return true;
         }
         
         return false;
+    }
+    
+    public void validateVersion() throws IOException, InterruptedException, DotNetCommandLineException, DotNetProjectManagerException {
+        String currentVersion = this.commandLine.getDotNetVersion();
+        boolean validation =  this.commandLine.validateDotNetVersion();
+        if (!validation) {
+            String message = String.format("Invalid dotnet version [%s].", currentVersion);
+            String step = "Validating version";
+            throw new DotNetProjectManagerException(message, step);
+        }
     }
     
     /**
@@ -211,7 +224,7 @@ public class DotNetProjectManager extends ManagerBase {
      */
     private void deleteProjectFolder() throws IOException, InterruptedException {
         if (this.projectFolder.exists()) {
-            this.projectFolder.delete();
+            FileTools.deleteDirectory(this.projectFolder);
         }            
     }
     
@@ -238,7 +251,7 @@ public class DotNetProjectManager extends ManagerBase {
      * @throws UnsupportedEncodingException
      * @throws FileNotFoundException 
      */
-    private void updateBuildInformation() throws NoSuchAlgorithmException, UnsupportedEncodingException, FileNotFoundException, IOException, InterruptedException {
+    private void updateBuildInformation() throws NoSuchAlgorithmException, UnsupportedEncodingException, FileNotFoundException, IOException, InterruptedException, DotNetCommandLineException {
         BuildInformation buildInformation = this.buildInformationManager.getBuildInformation();
         
         if (buildInformation == null) {
@@ -247,6 +260,7 @@ public class DotNetProjectManager extends ManagerBase {
         
         buildInformation.setBuildNumber(this.buildNumber);
         buildInformation.setPackagesHash(this.packages.getPackagesHash());
+        buildInformation.setDotNetVersion(this.commandLine.getDotNetVersion());
         
         this.buildInformationManager.setBuildInformation(buildInformation);
         this.buildInformationManager.saveBuildInformation();

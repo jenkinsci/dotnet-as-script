@@ -25,6 +25,7 @@ package com.dotnetscript.main;
 
 import com.dotnetscript.exceptions.DotNetCommandLineException;
 import com.dotnetscript.exceptions.DotNetPluginException;
+import com.dotnetscript.exceptions.DotNetProjectManagerException;
 import com.dotnetscript.general.NodeFile;
 import com.dotnetscript.general.ProjectConstants;
 import com.dotnetscript.managers.DotNetCommandLineManager;
@@ -106,7 +107,7 @@ public class DotNetScriptPluginFacade {
      * @throws NoSuchAlgorithmException
      * @throws EnvInjectException 
      */
-    public void runAll(String targetCode, String targetPackagesJson) throws IOException, InterruptedException, NoSuchAlgorithmException, EnvInjectException, UnsupportedEncodingException, DotNetPluginException {
+    public void runAll(String targetCode, String targetPackagesJson) throws IOException, InterruptedException, NoSuchAlgorithmException, EnvInjectException, UnsupportedEncodingException, DotNetPluginException, DotNetCommandLineException {
         NodeFile dotScriptWorkspace = new NodeFile(this.workspaceFolder, ProjectConstants.CACHE_FOLDER_NAME);
         
         DotNetPackagesManager dotNetPackages = new DotNetPackagesManager(this.logger, targetPackagesJson);                
@@ -118,7 +119,13 @@ public class DotNetScriptPluginFacade {
         DotNetCommandLineManager dotNetCommandLine = new DotNetCommandLineManager(this.logger, this.launcher, env, this.listener, uniqueFolder, ProjectConstants.PROJECT_FOLDER_NAME);
         
         NodeFile currentProjectFolder = new NodeFile(uniqueFolder, ProjectConstants.PROJECT_FOLDER_NAME);        
-        DotNetProjectManager projectManager = new DotNetProjectManager(this.logger, build.getNumber(), dotNetCommandLine, dotNetPackages, currentProjectFolder);
+        DotNetProjectManager projectManager = null;
+        
+        try {
+            projectManager = new DotNetProjectManager(this.logger, build.getNumber(), dotNetCommandLine, dotNetPackages, currentProjectFolder);
+        } catch (DotNetProjectManagerException error) {
+            throw new DotNetPluginException("Error initalizing the dotnet project manager class", error);
+        }        
         
         projectManager.addFileForCreation("JenkinsExecutor.cs", this.getResourceFileContent("com/dotnetscript/resources/JenkinsExecutor.cs"));
         projectManager.addFileForCreation("JenkinsManager.cs", this.getResourceFileContent("com/dotnetscript/resources/JenkinsManager.cs"));

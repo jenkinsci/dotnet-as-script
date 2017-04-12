@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 NewType.
+ * Copyright 2017 Ariel Lenis.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,13 +25,25 @@ package com.dotnetscript.exceptions;
 
 /**
  *
- * @author NewType
+ * @author Ariel Lenis
  */
 public class DotNetPluginException extends Exception {
+
+    private static final long serialVersionUID = 4465947919520920410L;
+    
+    /**
+     * 
+     * @param message 
+     */
     public DotNetPluginException(String message) {
         super(message);
     }
     
+    /**
+     * 
+     * @param message
+     * @param innerException 
+     */
     public DotNetPluginException(String message, Exception innerException) {
         super(message, innerException);
     }

@@ -74,9 +74,10 @@ public class BuildInformationManager extends ManagerBase {
     /**
      * Determines if the project needs be recreated
      * @param packagesHash
+     * @param dotNetVersion
      * @return 
      */
-    public boolean needsRecreation(String packagesHash) throws IOException, InterruptedException, InterruptedException {
+    public boolean needsRecreation(String packagesHash, String dotNetVersion) throws IOException, InterruptedException, InterruptedException {
         if (!this.buildInformationExists()) {
             this.prettyLog("The build information file doesn't exists.");
             return true;
@@ -93,6 +94,16 @@ public class BuildInformationManager extends ManagerBase {
         
         if (!this.buildInformation.getPackagesHash().equals(packagesHash)) {
             this.prettyLog("The hash " + this.buildInformation.getPackagesHash() + " differs from " + packagesHash + ".");
+            return true;
+        }
+        
+        if (this.buildInformation.getDotNetVersion() == null ) {
+            this.prettyLog("The store dotNet version is null.");
+            return true;
+        }
+    
+        if (!this.buildInformation.getDotNetVersion().equals(dotNetVersion)) {
+            this.prettyLog("The dotNetVersion " + this.buildInformation.getDotNetVersion()+ " differs from " + dotNetVersion + ".");
             return true;
         }
         

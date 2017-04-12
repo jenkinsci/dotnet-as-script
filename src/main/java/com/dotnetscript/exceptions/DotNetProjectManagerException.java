@@ -27,24 +27,24 @@ package com.dotnetscript.exceptions;
  *
  * @author Ariel Lenis
  */
-public class DotNetCommandLineException extends Exception {
+public class DotNetProjectManagerException extends Exception {
 
-    private static final long serialVersionUID = -22105261981061473L;
+    private static final long serialVersionUID = -8080669803944592194L;
     
     /**
      * 
      * @param message
-     * @param exitCode 
+     * @param innerException 
      */
-    public DotNetCommandLineException(String message, int exitCode) {
-        super(String.format("%s with exit code %d", message, exitCode));
+    public DotNetProjectManagerException(String message, Throwable innerException) {
+        super(message, innerException);
     }
-    
     /**
      * 
-     * @param message 
+     * @param message
+     * @param step 
      */
-    public DotNetCommandLineException(String message) {
-        super(message);
-    }
+    public DotNetProjectManagerException(String message, String step) {
+        super(String.format("Failed at step %s with message: %s", step, message));
+    }    
 }

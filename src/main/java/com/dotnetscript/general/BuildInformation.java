@@ -33,6 +33,7 @@ public class BuildInformation {
     
     private int buildNumber;
     private String packagesHash;
+    private String dotNetVersion;
     
     /**
      * Load the build information from a JSON string
@@ -46,6 +47,7 @@ public class BuildInformation {
 
         Object objBuildNumber = jsonObject.get("buildNumber");
         Object objPackagesHash = jsonObject.get("packagesHash");
+        Object objDotNetVersion = jsonObject.get("dotNetVersion");
         
         if (objBuildNumber != null && objBuildNumber instanceof Integer) {
             newOne.buildNumber = (int)objBuildNumber;
@@ -54,6 +56,10 @@ public class BuildInformation {
         if (objPackagesHash != null && objPackagesHash instanceof String) {
             newOne.packagesHash = (String)objPackagesHash;
         }
+        
+        if (objDotNetVersion != null && objDotNetVersion instanceof String) {
+            newOne.dotNetVersion = (String)objDotNetVersion;
+        }        
         
         return newOne;
     }
@@ -64,8 +70,11 @@ public class BuildInformation {
      */
     public String getAsJson() {
         JSONObject jsonObject = new JSONObject();
+        
         jsonObject.put("buildNumber", this.buildNumber);
         jsonObject.put("packagesHash", this.packagesHash);
+        jsonObject.put("dotNetVersion", this.dotNetVersion);
+        
         return jsonObject.toString();
     }
 
@@ -95,6 +104,20 @@ public class BuildInformation {
      */
     public void setPackagesHash(String packagesHash) {
         this.packagesHash = packagesHash;
+    }
+
+    /**
+     * @return the dotNetVersion
+     */
+    public String getDotNetVersion() {
+        return dotNetVersion;
+    }
+
+    /**
+     * @param dotNetVersion the dotNetVersion to set
+     */
+    public void setDotNetVersion(String dotNetVersion) {
+        this.dotNetVersion = dotNetVersion;
     }
     
 }

@@ -29,6 +29,7 @@ import com.dotnetscript.tools.FileTools;
 import hudson.EnvVars;
 import hudson.Launcher;
 import hudson.model.TaskListener;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Arrays;
@@ -233,4 +234,31 @@ public class DotNetCommandLineManager extends ManagerBase {
                 .join();        
     }
     
+    public boolean validateDotNetVersion() throws IOException, InterruptedException, DotNetCommandLineException {
+        // This command line class cannot work with the preview version of dotnet core
+        String preview = "1.0.0-preview";
+        String currentVersion = this.getDotNetVersion();
+        return !currentVersion.startsWith(preview);
+    }
+    
+    public String getDotNetVersion() throws IOException, InterruptedException, DotNetCommandLineException {
+        ByteArrayOutputStream  baos = new ByteArrayOutputStream  ();
+        List<String> args = Arrays.asList(this.getDotNetExecutable(), "--version");
+        
+        int result = this.launcher
+                        .launch()
+                        .cmds(args).stdout(baos)            
+                        .join();        
+        
+        if (result != 0) {
+            throw new DotNetCommandLineException("Error trying to get the dotnet version", result);
+        }
+
+        String version = baos.toString();
+        
+        if (version != null) {
+            version = version.trim();
+        }
+        return version;
+    }
 }
