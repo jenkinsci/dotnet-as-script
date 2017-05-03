@@ -25,6 +25,7 @@ package com.dotnetscript.managers;
 
 import com.dotnetscript.exceptions.DotNetCommandLineException;
 import com.dotnetscript.general.NodeFile;
+import com.dotnetscript.general.ProjectConstants;
 import com.dotnetscript.tools.FileTools;
 import hudson.EnvVars;
 import hudson.Launcher;
@@ -234,6 +235,13 @@ public class DotNetCommandLineManager extends ManagerBase {
                 .join();        
     }
     
+    /**
+     * Validates the DOTNET version
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws DotNetCommandLineException 
+     */
     public boolean validateDotNetVersion() throws IOException, InterruptedException, DotNetCommandLineException {
         // This command line class cannot work with the preview version of dotnet core
         String preview = "1.0.0-preview";
@@ -241,8 +249,15 @@ public class DotNetCommandLineManager extends ManagerBase {
         return !currentVersion.startsWith(preview);
     }
     
+    /**
+     * Gets the current DOTNET version
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws DotNetCommandLineException 
+     */
     public String getDotNetVersion() throws IOException, InterruptedException, DotNetCommandLineException {
-        ByteArrayOutputStream  baos = new ByteArrayOutputStream  ();
+        ByteArrayOutputStream  baos = new ByteArrayOutputStream();
         List<String> args = Arrays.asList(this.getDotNetExecutable(), "--version");
         
         int result = this.launcher
@@ -254,11 +269,8 @@ public class DotNetCommandLineManager extends ManagerBase {
             throw new DotNetCommandLineException("Error trying to get the dotnet version", result);
         }
 
-        String version = baos.toString();
+        String version = baos.toString(ProjectConstants.ENCODING);
         
-        if (version != null) {
-            version = version.trim();
-        }
-        return version;
+        return version.trim();
     }
 }

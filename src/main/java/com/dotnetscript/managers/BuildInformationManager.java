@@ -76,6 +76,8 @@ public class BuildInformationManager extends ManagerBase {
      * @param packagesHash
      * @param dotNetVersion
      * @return 
+     * @throws java.io.IOException 
+     * @throws java.lang.InterruptedException 
      */
     public boolean needsRecreation(String packagesHash, String dotNetVersion) throws IOException, InterruptedException, InterruptedException {
         if (!this.buildInformationExists()) {
@@ -124,6 +126,12 @@ public class BuildInformationManager extends ManagerBase {
         this.buildInformation = buildInformation;
     }
     
+    /**
+     * Saves the build information
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws InterruptedException 
+     */
     public void saveBuildInformation() throws FileNotFoundException, IOException, InterruptedException {
         String json = this.buildInformation.getAsJson();
         FileTools.writeFile(buildInformationFile, json);

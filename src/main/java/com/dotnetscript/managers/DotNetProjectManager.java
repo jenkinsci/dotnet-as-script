@@ -60,6 +60,10 @@ public class DotNetProjectManager extends ManagerBase {
      * @param commandLine
      * @param targetPackages
      * @param projectFolder 
+     * @throws java.io.IOException 
+     * @throws java.lang.InterruptedException 
+     * @throws com.dotnetscript.exceptions.DotNetProjectManagerException 
+     * @throws com.dotnetscript.exceptions.DotNetCommandLineException 
      */
     public DotNetProjectManager(PrintStream logger, int buildNumber, DotNetCommandLineManager commandLine, DotNetPackagesManager targetPackages, NodeFile projectFolder) throws IOException, InterruptedException, InterruptedException, DotNetCommandLineException, DotNetProjectManagerException {
         super(logger);

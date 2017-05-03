@@ -24,11 +24,13 @@
 package com.dotnetscript.tools;
 
 import com.dotnetscript.general.NodeFile;
+import com.dotnetscript.general.ProjectConstants;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
 
 /**
@@ -36,15 +38,16 @@ import java.util.Scanner;
  * @author Ariel.Lenis
  */
 public class FileTools { 
-  
+
     /**
      * Writes the content string inside the target file.
      * @param file
      * @param content
      * @throws FileNotFoundException 
+     * @throws java.io.UnsupportedEncodingException 
      */
-    public static void writeFile(File file, String content) throws FileNotFoundException {
-        try (PrintWriter writer = new PrintWriter(file)) {
+    public static void writeFile(File file, String content) throws FileNotFoundException, UnsupportedEncodingException {
+        try (PrintWriter writer = new PrintWriter(file, ProjectConstants.ENCODING)) {
             writer.write(content);
         }
     }    
@@ -57,21 +60,19 @@ public class FileTools {
      * @throws java.lang.InterruptedException 
      */
     public static void writeFile(NodeFile nodeFile, String content) throws FileNotFoundException, IOException, InterruptedException {
-        OutputStream writeStream = nodeFile.getFilePath().write();
-        try (PrintWriter writer = new PrintWriter(writeStream)) {
-            writer.write(content);
-        }
+        nodeFile.getFilePath().write(content, ProjectConstants.ENCODING);
     }       
     
     /**
      * Get the file content as String
      * @param file
      * @return 
+     * @throws java.io.IOException 
      */
-    public static String getFileContent(File file) {
+    public static String getFileContent(File file) throws IOException {
         StringBuilder result = new StringBuilder("");
         
-        try (Scanner scanner = new Scanner(file)) {
+        try (Scanner scanner = new Scanner(file, ProjectConstants.ENCODING)) {
 
             while (scanner.hasNextLine()) {
                     String line = scanner.nextLine();
@@ -80,8 +81,8 @@ public class FileTools {
 
             scanner.close();
 
-	} catch (Exception e) {
-            e.printStackTrace();
+	} catch (IOException e) {
+            throw e;
 	}
 		
 	return result.toString();

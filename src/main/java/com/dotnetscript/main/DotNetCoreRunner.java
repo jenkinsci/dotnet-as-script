@@ -1,4 +1,6 @@
 package com.dotnetscript.main;
+import com.dotnetscript.exceptions.DotNetCommandLineException;
+import com.dotnetscript.exceptions.DotNetPluginException;
 import hudson.Launcher;
 import hudson.Extension;
 import hudson.model.AbstractBuild;
@@ -17,7 +19,9 @@ import hudson.model.BuildListener;
 import hudson.model.Result;
 import java.io.PrintStream;
 import java.io.Serializable;
+import java.security.NoSuchAlgorithmException;
 import javax.annotation.Nonnull;
+import org.jenkinsci.lib.envinject.EnvInjectException;
 
 /**
  * Sample {@link Builder}.
@@ -153,6 +157,8 @@ public class DotNetCoreRunner extends Builder implements Serializable {
          *      Note that returning {@link FormValidation#error(String)} does not
          *      prevent the form from being saved. It just means that a message
          *      will be displayed to the user. 
+         * @throws java.io.IOException 
+         * @throws javax.servlet.ServletException 
          */
         public FormValidation doCheckName(@QueryParameter String value)
                 throws IOException, ServletException {
@@ -163,6 +169,12 @@ public class DotNetCoreRunner extends Builder implements Serializable {
             return FormValidation.ok();
         }
 
+        /**
+         * The isApplicable method
+         * @param aClass
+         * @return 
+         */
+        @Override
         public boolean isApplicable(Class<? extends AbstractProject> aClass) {
             // Indicates that this builder can be used with all kinds of project types 
             return true;
@@ -172,10 +184,18 @@ public class DotNetCoreRunner extends Builder implements Serializable {
          * This human readable name is used in the configuration screen.
          * @return 
          */
+        @Override
         public String getDisplayName() {
             return DescriptorImpl.PLUGIN_NAME;
         }
 
+        /**
+         * configure method
+         * @param req
+         * @param formData
+         * @return
+         * @throws hudson.model.Descriptor.FormException 
+         */
         @Override
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
             // To persist global configuration information,

@@ -29,6 +29,12 @@ package com.dotnetscript.general;
  * @author Ariel.Lenis
  */
 public class ProjectConstants {
+    
+    /**
+     * The target encoding for this project
+     */
+    public static final String ENCODING = "UTF-8";
+    
     /**
      * The target folder name to create inside the unique folder
      */

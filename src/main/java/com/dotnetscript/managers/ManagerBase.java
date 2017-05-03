@@ -32,14 +32,26 @@ import java.io.PrintStream;
 public abstract class ManagerBase {
     protected PrintStream logger;
     
+    /**
+     * The manager base constructor
+     * @param logger 
+     */
     public ManagerBase(PrintStream logger) {
         this.logger = logger;
     }
    
+    /**
+     * The log method
+     * @param message 
+     */
     protected void log(String message) {
         this.logger.println(message);
     }
     
+    /**
+     * the log method with format
+     * @param message 
+     */
     protected void prettyLog(String message) {
         this.log("[DotNetScript] " + message);
     }
