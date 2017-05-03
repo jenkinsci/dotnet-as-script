@@ -21,11 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.dotnetscript.managers;
+package hudson.plugins.dotnetasscript.managers;
 
-import com.dotnetscript.general.BuildInformation;
-import com.dotnetscript.general.NodeFile;
-import com.dotnetscript.tools.FileTools;
+import hudson.plugins.dotnetasscript.general.BuildInformation;
+import hudson.plugins.dotnetasscript.general.NodeFile;
+import hudson.plugins.dotnetasscript.tools.FileTools;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;

@@ -1,4 +1,4 @@
-package com.dotnetscript.general;
+package hudson.plugins.dotnetasscript.general;
 
 /*
  * The MIT License
@@ -38,7 +38,7 @@ public class ProjectConstants {
     /**
      * The target folder name to create inside the unique folder
      */
-    public static final String PROJECT_FOLDER_NAME = "dotscript";
+    public static final String PROJECT_FOLDER_NAME = "dotnetascript";
     
     /**
      * The file that will store the last build information
@@ -48,5 +48,5 @@ public class ProjectConstants {
     /**
      * The cache folder name that contains all the unique folders
      */
-    public static final String CACHE_FOLDER_NAME = ".dotscript";
+    public static final String CACHE_FOLDER_NAME = ".dotnetascript";
 }

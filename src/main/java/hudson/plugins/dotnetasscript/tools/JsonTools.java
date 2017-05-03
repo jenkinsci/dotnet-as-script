@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.dotnetscript.tools;
+package hudson.plugins.dotnetasscript.tools;
 
 import java.util.HashMap;
 import java.util.Iterator;

@@ -1,6 +1,4 @@
-package com.dotnetscript.main;
-import com.dotnetscript.exceptions.DotNetCommandLineException;
-import com.dotnetscript.exceptions.DotNetPluginException;
+package hudson.plugins.dotnetasscript.main;
 import hudson.Launcher;
 import hudson.Extension;
 import hudson.model.AbstractBuild;
@@ -19,9 +17,7 @@ import hudson.model.BuildListener;
 import hudson.model.Result;
 import java.io.PrintStream;
 import java.io.Serializable;
-import java.security.NoSuchAlgorithmException;
 import javax.annotation.Nonnull;
-import org.jenkinsci.lib.envinject.EnvInjectException;
 
 /**
  * Sample {@link Builder}.
@@ -93,10 +89,10 @@ public class DotNetCoreRunner extends Builder implements Serializable {
     public boolean perform(@Nonnull AbstractBuild<?, ?> build, @Nonnull Launcher launcher, @Nonnull BuildListener listener) throws IOException, InterruptedException {
         PrintStream targetLogger = listener.getLogger();
         
-        DotNetScriptPluginFacade dotNetScriptFacade = new DotNetScriptPluginFacade(targetLogger, build, launcher, listener);
+        DotNetAsScriptPluginFacade dotNetAsScriptFacade = new DotNetAsScriptPluginFacade(targetLogger, build, launcher, listener);
         
         try {
-            dotNetScriptFacade.runAll(this.getTargetCode(), this.getAdditionalPackages());  
+            dotNetAsScriptFacade.runAll(this.getTargetCode(), this.getAdditionalPackages());  
         } catch (Exception error) {
             error.printStackTrace(targetLogger);
             build.setResult(Result.FAILURE);            

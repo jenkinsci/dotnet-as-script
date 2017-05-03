@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 Ariel.Lenis.
+ * Copyright 2017 Ariel Lenis.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,55 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.dotnetscript.general;
+package hudson.plugins.dotnetasscript.exceptions;
 
 /**
  *
- * @author Ariel.Lenis
+ * @author Ariel Lenis
  */
-public class FileForCreation {
-    private String path;
-    private String content;
-    
-    /**
-     * File for creation constructor
-     * @param path
-     * @param content 
-     */
-    public FileForCreation(String path, String content) {
-        this.path = path;
-        this.content = content;
-    }
+public class DotNetProjectManagerException extends Exception {
+
+    private static final long serialVersionUID = -8080669803944592194L;
     
     /**
      * 
-     * @return the current path value
+     * @param message
+     * @param innerException 
      */
-    public String getPath() {
-        return this.path;
+    public DotNetProjectManagerException(String message, Throwable innerException) {
+        super(message, innerException);
     }
-    
     /**
      * 
-     * @param path value to set in this object
+     * @param message
+     * @param step 
      */
-    public void setPath(String path) {
-        this.path = path;
-    }
-    
-    /**
-     * 
-     * @return the current content value
-     */
-    public String getContent() {
-        return this.content;
+    public DotNetProjectManagerException(String message, String step) {
+        super(String.format("Failed at step %s with message: %s", step, message));
     }    
-    
-    /**
-     * 
-     * @param content value to set in this object
-     */
-    public void setContent(String content) {
-        this.content = content;
-    }
 }

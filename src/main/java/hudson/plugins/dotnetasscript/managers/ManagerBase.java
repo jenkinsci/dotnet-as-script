@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 Ariel Lenis.
+ * Copyright 2017 Ariel.Lenis.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,31 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.dotnetscript.exceptions;
+package hudson.plugins.dotnetasscript.managers;
+
+import java.io.PrintStream;
 
 /**
  *
- * @author Ariel Lenis
+ * @author Ariel.Lenis
  */
-public class DotNetPluginException extends Exception {
-
-    private static final long serialVersionUID = 4465947919520920410L;
+public abstract class ManagerBase {
+    protected PrintStream logger;
     
     /**
-     * 
+     * The manager base constructor
+     * @param logger 
+     */
+    public ManagerBase(PrintStream logger) {
+        this.logger = logger;
+    }
+   
+    /**
+     * The log method
      * @param message 
      */
-    public DotNetPluginException(String message) {
-        super(message);
+    protected void log(String message) {
+        this.logger.println(message);
     }
     
     /**
-     * 
-     * @param message
-     * @param innerException 
+     * the log method with format
+     * @param message 
      */
-    public DotNetPluginException(String message, Exception innerException) {
-        super(message, innerException);
+    protected void prettyLog(String message) {
+        this.log("[DotNetAsScript] " + message);
     }
-    
 }

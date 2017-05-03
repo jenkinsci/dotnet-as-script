@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.dotnetscript.managers;
+package hudson.plugins.dotnetasscript.managers;
 
-import com.dotnetscript.tools.JsonTools;
-import com.dotnetscript.tools.StringTools;
+import hudson.plugins.dotnetasscript.tools.JsonTools;
+import hudson.plugins.dotnetasscript.tools.StringTools;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;

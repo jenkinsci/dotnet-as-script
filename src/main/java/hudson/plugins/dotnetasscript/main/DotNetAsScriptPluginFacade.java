@@ -21,18 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.dotnetscript.main;
+package hudson.plugins.dotnetasscript.main;
 
-import com.dotnetscript.exceptions.DotNetCommandLineException;
-import com.dotnetscript.exceptions.DotNetPluginException;
-import com.dotnetscript.exceptions.DotNetProjectManagerException;
-import com.dotnetscript.general.NodeFile;
-import com.dotnetscript.general.ProjectConstants;
-import com.dotnetscript.managers.DotNetCommandLineManager;
-import com.dotnetscript.managers.DotNetPackagesManager;
-import com.dotnetscript.managers.DotNetProjectManager;
-import com.dotnetscript.tools.FileTools;
-import com.dotnetscript.tools.StringTools;
+import hudson.plugins.dotnetasscript.exceptions.DotNetCommandLineException;
+import hudson.plugins.dotnetasscript.exceptions.DotNetPluginException;
+import hudson.plugins.dotnetasscript.exceptions.DotNetProjectManagerException;
+import hudson.plugins.dotnetasscript.general.NodeFile;
+import hudson.plugins.dotnetasscript.general.ProjectConstants;
+import hudson.plugins.dotnetasscript.managers.DotNetCommandLineManager;
+import hudson.plugins.dotnetasscript.managers.DotNetPackagesManager;
+import hudson.plugins.dotnetasscript.managers.DotNetProjectManager;
+import hudson.plugins.dotnetasscript.tools.FileTools;
+import hudson.plugins.dotnetasscript.tools.StringTools;
 import hudson.EnvVars;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
@@ -52,7 +52,7 @@ import org.jenkinsci.plugins.envinject.EnvInjectBuilder;
  *
  * @author Ariel.Lenis
  */
-public class DotNetScriptPluginFacade {
+public class DotNetAsScriptPluginFacade {
     private final AbstractBuild<?, ?> build;
     private final Launcher launcher;
     private final BuildListener listener;
@@ -68,7 +68,7 @@ public class DotNetScriptPluginFacade {
      * @throws IOException
      * @throws InterruptedException 
      */
-    public DotNetScriptPluginFacade(PrintStream logger, @Nonnull AbstractBuild<?, ?> build, @Nonnull Launcher launcher, @Nonnull BuildListener listener) throws IOException, InterruptedException {
+    public DotNetAsScriptPluginFacade(PrintStream logger, @Nonnull AbstractBuild<?, ?> build, @Nonnull Launcher launcher, @Nonnull BuildListener listener) throws IOException, InterruptedException {
         this.logger = logger;
         this.build = build;
         this.launcher = launcher;
@@ -127,9 +127,9 @@ public class DotNetScriptPluginFacade {
             throw new DotNetPluginException("Error initalizing the dotnet project manager class", error);
         }        
         
-        projectManager.addFileForCreation("JenkinsExecutor.cs", this.getResourceFileContent("com/dotnetscript/resources/JenkinsExecutor.cs"));
-        projectManager.addFileForCreation("JenkinsManager.cs", this.getResourceFileContent("com/dotnetscript/resources/JenkinsManager.cs"));
-        projectManager.addFileForCreation("Program.cs", this.getResourceFileContent("com/dotnetscript/resources/Program.cs"));
+        projectManager.addFileForCreation("JenkinsExecutor.cs", this.getResourceFileContent("hudson/plugins/dotnetasscript/resources/JenkinsExecutor.cs"));
+        projectManager.addFileForCreation("JenkinsManager.cs", this.getResourceFileContent("hudson/plugins/dotnetasscript/resources/JenkinsManager.cs"));
+        projectManager.addFileForCreation("Program.cs", this.getResourceFileContent("hudson/plugins/dotnetasscript/resources/Program.cs"));
         projectManager.addFileForCreation("TargetCode.cs", targetCode);
    
         if (!uniqueFolder.exists()) {

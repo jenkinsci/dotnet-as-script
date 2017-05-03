@@ -9,7 +9,7 @@
     <version>2.11</version>
     <relativePath/>
   </parent>
-  <groupId>com.dotNetScript</groupId>
+  <groupId>org.jenkins-ci.plugins</groupId>
   <artifactId>dotnet-as-script</artifactId>
   <version>1.0</version>
   <packaging>hpi</packaging>

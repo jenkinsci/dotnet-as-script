@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.dotnetscript.general;
+package hudson.plugins.dotnetasscript.general;
 
 import hudson.FilePath;
 import java.io.IOException;

@@ -21,14 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.dotnetscript.tools;
+package hudson.plugins.dotnetasscript.tools;
 
-import com.dotnetscript.general.NodeFile;
-import com.dotnetscript.general.ProjectConstants;
+import hudson.plugins.dotnetasscript.general.NodeFile;
+import hudson.plugins.dotnetasscript.general.ProjectConstants;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Scanner;

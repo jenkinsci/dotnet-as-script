@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 Ariel Lenis.
+ * Copyright 2017 Ariel.Lenis.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,30 +21,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.dotnetscript.exceptions;
+package hudson.plugins.dotnetasscript.general;
 
 /**
  *
- * @author Ariel Lenis
+ * @author Ariel.Lenis
  */
-public class DotNetCommandLineException extends Exception {
-
-    private static final long serialVersionUID = -22105261981061473L;
+public class FileForCreation {
+    private String path;
+    private String content;
     
     /**
-     * 
-     * @param message
-     * @param exitCode 
+     * File for creation constructor
+     * @param path
+     * @param content 
      */
-    public DotNetCommandLineException(String message, int exitCode) {
-        super(String.format("%s with exit code %d", message, exitCode));
+    public FileForCreation(String path, String content) {
+        this.path = path;
+        this.content = content;
     }
     
     /**
      * 
-     * @param message 
+     * @return the current path value
      */
-    public DotNetCommandLineException(String message) {
-        super(message);
+    public String getPath() {
+        return this.path;
+    }
+    
+    /**
+     * 
+     * @param path value to set in this object
+     */
+    public void setPath(String path) {
+        this.path = path;
+    }
+    
+    /**
+     * 
+     * @return the current content value
+     */
+    public String getContent() {
+        return this.content;
+    }    
+    
+    /**
+     * 
+     * @param content value to set in this object
+     */
+    public void setContent(String content) {
+        this.content = content;
     }
 }

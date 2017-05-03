@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.dotnetscript.managers;
+package hudson.plugins.dotnetasscript.managers;
 
-import com.dotnetscript.exceptions.DotNetCommandLineException;
-import com.dotnetscript.general.NodeFile;
-import com.dotnetscript.general.ProjectConstants;
-import com.dotnetscript.tools.FileTools;
+import hudson.plugins.dotnetasscript.exceptions.DotNetCommandLineException;
+import hudson.plugins.dotnetasscript.general.NodeFile;
+import hudson.plugins.dotnetasscript.general.ProjectConstants;
+import hudson.plugins.dotnetasscript.tools.FileTools;
 import hudson.EnvVars;
 import hudson.Launcher;
 import hudson.model.TaskListener;
@@ -76,7 +76,7 @@ public class DotNetCommandLineManager extends ManagerBase {
      * Creates the DOTNET project
      * @throws IOException
      * @throws InterruptedException 
-     * @throws com.dotnetscript.exceptions.DotNetCommandLineException 
+     * @throws hudson.plugins.dotnetasscript.exceptions.DotNetCommandLineException 
      */
     public void createProject() throws IOException, InterruptedException, DotNetCommandLineException
     {
@@ -102,7 +102,7 @@ public class DotNetCommandLineManager extends ManagerBase {
      * Restores the DOTNET packages
      * @throws IOException
      * @throws InterruptedException 
-     * @throws com.dotnetscript.exceptions.DotNetCommandLineException 
+     * @throws hudson.plugins.dotnetasscript.exceptions.DotNetCommandLineException 
      */
     public void restoreDependencies() throws IOException, InterruptedException, DotNetCommandLineException
     {
@@ -133,7 +133,7 @@ public class DotNetCommandLineManager extends ManagerBase {
      * @param packageName
      * @throws IOException
      * @throws InterruptedException 
-     * @throws com.dotnetscript.exceptions.DotNetCommandLineException 
+     * @throws hudson.plugins.dotnetasscript.exceptions.DotNetCommandLineException 
      */
     public void addPackage(String packageName) throws IOException, InterruptedException, DotNetCommandLineException {
         List<String> argsCreate = Arrays.asList(this.getDotNetExecutable(), "add", "package", packageName);
@@ -156,7 +156,7 @@ public class DotNetCommandLineManager extends ManagerBase {
      * @param version
      * @throws IOException
      * @throws InterruptedException 
-     * @throws com.dotnetscript.exceptions.DotNetCommandLineException 
+     * @throws hudson.plugins.dotnetasscript.exceptions.DotNetCommandLineException 
      */
     public void addPackage(String packageName, String version) throws IOException, InterruptedException, DotNetCommandLineException {
         List<String> argsCreate = Arrays.asList(this.getDotNetExecutable(), "add", "package", packageName, "-v", version);
@@ -177,7 +177,7 @@ public class DotNetCommandLineManager extends ManagerBase {
      * Builds the current DOTNET project
      * @throws IOException
      * @throws InterruptedException 
-     * @throws com.dotnetscript.exceptions.DotNetCommandLineException 
+     * @throws hudson.plugins.dotnetasscript.exceptions.DotNetCommandLineException 
      */
     public void build() throws IOException, InterruptedException, DotNetCommandLineException {
         List<String> argsCreate = Arrays.asList(this.getDotNetExecutable(), "build");
@@ -198,7 +198,7 @@ public class DotNetCommandLineManager extends ManagerBase {
      * Runs the current DOTNET project
      * @throws IOException
      * @throws InterruptedException 
-     * @throws com.dotnetscript.exceptions.DotNetCommandLineException 
+     * @throws hudson.plugins.dotnetasscript.exceptions.DotNetCommandLineException 
      */
     public void run() throws IOException, InterruptedException, DotNetCommandLineException
     {

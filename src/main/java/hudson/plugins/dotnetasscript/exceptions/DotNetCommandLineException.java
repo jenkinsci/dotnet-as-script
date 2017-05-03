@@ -21,30 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.dotnetscript.exceptions;
+package hudson.plugins.dotnetasscript.exceptions;
 
 /**
  *
  * @author Ariel Lenis
  */
-public class DotNetProjectManagerException extends Exception {
+public class DotNetCommandLineException extends Exception {
 
-    private static final long serialVersionUID = -8080669803944592194L;
+    private static final long serialVersionUID = -22105261981061473L;
     
     /**
      * 
      * @param message
-     * @param innerException 
+     * @param exitCode 
      */
-    public DotNetProjectManagerException(String message, Throwable innerException) {
-        super(message, innerException);
+    public DotNetCommandLineException(String message, int exitCode) {
+        super(String.format("%s with exit code %d", message, exitCode));
     }
+    
     /**
      * 
-     * @param message
-     * @param step 
+     * @param message 
      */
-    public DotNetProjectManagerException(String message, String step) {
-        super(String.format("Failed at step %s with message: %s", step, message));
-    }    
+    public DotNetCommandLineException(String message) {
+        super(message);
+    }
 }

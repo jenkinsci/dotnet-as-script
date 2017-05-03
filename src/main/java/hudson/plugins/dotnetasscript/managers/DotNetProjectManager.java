@@ -21,15 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.dotnetscript.managers;
+package hudson.plugins.dotnetasscript.managers;
 
-import com.dotnetscript.exceptions.DotNetCommandLineException;
-import com.dotnetscript.exceptions.DotNetProjectManagerException;
-import com.dotnetscript.general.FileForCreation;
-import com.dotnetscript.general.ProjectConstants;
-import com.dotnetscript.general.BuildInformation;
-import com.dotnetscript.general.NodeFile;
-import com.dotnetscript.tools.FileTools;
+import hudson.plugins.dotnetasscript.exceptions.DotNetCommandLineException;
+import hudson.plugins.dotnetasscript.exceptions.DotNetProjectManagerException;
+import hudson.plugins.dotnetasscript.general.FileForCreation;
+import hudson.plugins.dotnetasscript.general.ProjectConstants;
+import hudson.plugins.dotnetasscript.general.BuildInformation;
+import hudson.plugins.dotnetasscript.general.NodeFile;
+import hudson.plugins.dotnetasscript.tools.FileTools;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -62,8 +62,8 @@ public class DotNetProjectManager extends ManagerBase {
      * @param projectFolder 
      * @throws java.io.IOException 
      * @throws java.lang.InterruptedException 
-     * @throws com.dotnetscript.exceptions.DotNetProjectManagerException 
-     * @throws com.dotnetscript.exceptions.DotNetCommandLineException 
+     * @throws hudson.plugins.dotnetasscript.exceptions.DotNetProjectManagerException 
+     * @throws hudson.plugins.dotnetasscript.exceptions.DotNetCommandLineException 
      */
     public DotNetProjectManager(PrintStream logger, int buildNumber, DotNetCommandLineManager commandLine, DotNetPackagesManager targetPackages, NodeFile projectFolder) throws IOException, InterruptedException, InterruptedException, DotNetCommandLineException, DotNetProjectManagerException {
         super(logger);
