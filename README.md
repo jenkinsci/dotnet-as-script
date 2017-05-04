@@ -12,5 +12,5 @@ Features:
  * For future executions of unchanged code the compiled executable will be used.
  * Inject environment variables for the next build step.
 
-You need to be sure to have installed a dotnet core installation.
+You need to be sure to have installed dotnet core.
 
