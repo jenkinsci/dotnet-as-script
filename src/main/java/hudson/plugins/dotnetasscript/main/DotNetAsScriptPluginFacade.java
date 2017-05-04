@@ -39,12 +39,15 @@ import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
 import javax.annotation.Nonnull;
 import net.sf.json.JSONObject;
+import org.apache.commons.io.IOUtils;
 import org.jenkinsci.lib.envinject.EnvInjectException;
 import org.jenkinsci.plugins.envinject.EnvInjectBuilder;
 
@@ -80,11 +83,13 @@ public class DotNetAsScriptPluginFacade {
      * Gets the target resource file as string
      * @param fileName
      * @return 
+     * @throws java.io.IOException 
      */
     public String getResourceFileContent(String fileName) throws IOException {
 	ClassLoader classLoader = getClass().getClassLoader();
-	File file = new File(classLoader.getResource(fileName).getFile());
-        return FileTools.getFileContent(file);
+        InputStream inputStream = classLoader.getResourceAsStream(fileName);
+        String content = IOUtils.toString(inputStream);
+        return content;
     } 
     
     /**
