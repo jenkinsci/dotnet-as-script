@@ -10,7 +10,7 @@
   </parent>
   <groupId>org.jenkins-ci.plugins</groupId>
   <artifactId>dotnet-as-script</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
   <properties>
@@ -100,6 +100,6 @@
     </dependencies>
 
   <scm>
-    <tag>dotnet-as-script-1.0.2</tag>
+    <tag>dotnet-as-script-1.0</tag>
   </scm>
 </project>
