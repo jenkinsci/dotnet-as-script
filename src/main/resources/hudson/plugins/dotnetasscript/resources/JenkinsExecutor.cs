@@ -1,4 +1,4 @@
-﻿/*
+/*
  * The MIT License
  *
  * Copyright 2017 Ariel.Lenis.

@@ -88,7 +88,7 @@ public class DotNetAsScriptPluginFacade {
     public String getResourceFileContent(String fileName) throws IOException {
 	ClassLoader classLoader = getClass().getClassLoader();
         InputStream inputStream = classLoader.getResourceAsStream(fileName);
-        String content = IOUtils.toString(inputStream);
+        String content = IOUtils.toString(inputStream, ProjectConstants.ENCODING);
         return content;
     } 
     
